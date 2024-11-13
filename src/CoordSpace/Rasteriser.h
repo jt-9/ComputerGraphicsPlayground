@@ -6,11 +6,11 @@
 #include "CoordSpaceDefs.h"
 
 #ifdef _WINDOWS
-	#include "WinRasterisationPolicies.h"
-	#include <concepts>
+    #include "WinRasterisationPolicies.h"
+    #include <concepts>
 
 MY_COORD_SPACE_BEGIN
-	using Rasteriser = ::coordsys::WinGDIRasteriser;
+    using Rasteriser = ::coordsys::WinGDIRasteriser;
 MY_COORD_SPACE_END
 #elif defined __linux__
 #endif

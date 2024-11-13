@@ -14,19 +14,19 @@ MY_COORD_SPACE_BEGIN
 template<typename CU>
 struct LabelFormatter
 {
-	explicit constexpr LabelFormatter(std::string_view labelFormat) noexcept
-		: format{ labelFormat }
-	{}
+    explicit constexpr LabelFormatter(std::string_view labelFormat) noexcept
+        : format{ labelFormat }
+    {}
 
-	explicit constexpr LabelFormatter(const std::string& labelFormat) noexcept
-		: format{ labelFormat }
-	{}
+    explicit constexpr LabelFormatter(const std::string& labelFormat) noexcept
+        : format{ labelFormat }
+    {}
 
-	raii_inline constexpr auto operator()(CU value) const noexcept {
-		return std::vformat(format, std::make_format_args(value));
-	}
+    raii_inline constexpr auto operator()(CU value) const noexcept {
+        return std::vformat(format, std::make_format_args(value));
+    }
 
-	std::string format;
+    std::string format;
 };
 
 MY_COORD_SPACE_END

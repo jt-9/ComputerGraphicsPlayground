@@ -8,12 +8,11 @@
 #include "Rasteriser.h"
 #include "CoordSpace2D.h"
 
-
 #include <Windows.h> // for HDC and other window types
 
-#include <string>
-#include <optional>
 #include <format>
+#include <optional>
+#include <cassert>
 
 MY_COORD_SPACE_BEGIN
 
@@ -74,7 +73,9 @@ public:
 			: step{ tickStep }, upperPart{ tickUpperPart }, lowerPart{ tickLowerPart },
 			pen{ tickPen }, brush{ tickBrush }, originOffset{ offsetFromOrigin }, axisEndOffset{ offsetFromAxisEnd },
 			maxCount{ tickMaxCount }
-		{}
+		{
+			assert(tickStep > 0 && "Failed requirement tick mark step > 0");
+		}
 
 		constexpr TickAttributes(const TickAttributes&) noexcept = default;
 		constexpr TickAttributes(TickAttributes&&) noexcept = default;
@@ -113,7 +114,9 @@ public:
 			: step{ labelStep }, formatter{ std::forward<F>(labelFormatter) }, textOffset{ labelTextOffset }, textAlign{ labelTextAlign },
 			font{ labelFont }, colour{ labelColour }, originOffset{ offsetFromOrigin }, axisEndOffset{ offsetFromAxisEnd },
 			maxCount{ labelMaxCount }
-		{}
+		{
+			assert(labelStep > 0 && "Failed requirement label step > 0");
+		}
 
 		constexpr LabelAttributes(const LabelAttributes&) noexcept = default;
 		constexpr LabelAttributes& operator=(const LabelAttributes&) noexcept = default;
@@ -175,31 +178,31 @@ public:
 	//Axis2D(const Axis2D& src) = delete;
 	//Axis2D& operator =(const Axis2D& rhs) = delete;
 
-	//constexpr void draw(HDC hdc, CoordSpace2D<> space);
+	//constexpr void draw(CoordSpace2D<> space);
 
 	template<typename TU>
-	constexpr void draw(HDC hdc, Rasteriser rasteriser, const CoordSpace2D<SU, CU, TU>& space) const noexcept;
+	constexpr void draw(Rasteriser rasteriser, const CoordSpace2D<SU, CU, TU>& space) const noexcept;
 
 private:
 	constexpr bool shouldDrawAxis() const noexcept;
 
-	constexpr void drawAxis(HDC hdc, Rasteriser rasteriser, const ScreenUnitVector& startPoint, const ScreenUnitVector& endPoint, const AxisAttributes& aa) const noexcept;
+	constexpr void drawAxis(Rasteriser rasteriser, const ScreenUnitVector& startPoint, const ScreenUnitVector& endPoint, const AxisAttributes& aa) const noexcept;
 
 	constexpr bool shouldDrawTickMarks() const noexcept;
 
 	template<typename TU>
-	constexpr void drawTickMarks(HDC hdc, Rasteriser rasteriser, const CoordSpace2D<SU, CU, TU>& space, const ScreenUnitVector& startPoint, const ScreenUnitVector& endPoint, const TickAttributes& ta) const noexcept;
+	constexpr void drawTickMarks(Rasteriser rasteriser, const CoordSpace2D<SU, CU, TU>& space, const ScreenUnitVector& startPoint, const ScreenUnitVector& endPoint, const TickAttributes& ta) const noexcept;
 
 	template<typename TU>
-	constexpr void drawTickMarkAt(HDC hdc, Rasteriser rasteriser, const TickAttributes& ta, const mymtl::Vector2<TU>& axisUnitNormal, const ScreenUnitVector& tickScreenPoint) const noexcept;
+	constexpr void drawTickMarkAt(Rasteriser rasteriser, const TickAttributes& ta, const mymtl::Vector2<TU>& axisUnitNormal, const ScreenUnitVector& tickScreenPoint) const noexcept;
 
 	constexpr bool shouldDisplayLabels() const noexcept;
 
 	template<typename TU>
-	constexpr void displayLabels(HDC hdc, Rasteriser rasteriser, const ScreenUnitVector& startPoint, const ScreenUnitVector& endPoint, const LabelAttributes& la) const noexcept;
+	constexpr void displayLabels(Rasteriser rasteriser, const ScreenUnitVector& startPoint, const ScreenUnitVector& endPoint, const LabelAttributes& la) const noexcept;
 
 	template<typename TU>
-	constexpr void displayLabelAt(HDC hdc, Rasteriser rasteriser, const LabelAttributes& la, ClientUnit labelPosition,
+	constexpr void displayLabelAt(Rasteriser rasteriser, const LabelAttributes& la, ClientUnit labelPosition,
 		const mymtl::Vector2<TU>& axisDirUnitVector, const mymtl::Vector2<TU>& axisUnitNormal, const ScreenUnitVector& labelAxisScreenPoint) const noexcept;
 
 public:

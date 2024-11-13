@@ -133,46 +133,46 @@ template<typename SU, typename CU, typename TU, typename Formatter>
 }
 
 template<typename SU, typename CU, typename TU, typename Formatter>
-MYMTL_INLINE constexpr auto CartesianCoordSys2D<SU, CU, TU, Formatter>::moveTo(HDC hdc, ClientUnit x, ClientUnit y) const noexcept {
+MYMTL_INLINE constexpr auto CartesianCoordSys2D<SU, CU, TU, Formatter>::moveTo(Rasteriser r, ClientUnit x, ClientUnit y) const noexcept {
 	const auto sv = space_.clientToScreenPoint(x, y);
 
-	return rasteriser_.moveTo(hdc, static_cast<SU>(sv.x), static_cast<SU>(sv.y));
+	return r.moveTo(static_cast<SU>(sv.x), static_cast<SU>(sv.y));
 }
 
 template<typename SU, typename CU, typename TU, typename Formatter>
-MYMTL_INLINE constexpr auto CartesianCoordSys2D<SU, CU, TU, Formatter>::lineTo(HDC hdc, ClientUnit x, ClientUnit y) const noexcept {
+MYMTL_INLINE constexpr auto CartesianCoordSys2D<SU, CU, TU, Formatter>::lineTo(Rasteriser r, ClientUnit x, ClientUnit y) const noexcept {
 	const auto sv = space_.clientToScreenPoint(x, y);
 
-	return rasteriser_.lineTo(hdc, static_cast<SU>(sv.x), static_cast<SU>(sv.y));
+	return r.lineTo(static_cast<SU>(sv.x), static_cast<SU>(sv.y));
 }
 
 template<typename SU, typename CU, typename TU, typename Formatter>
-MYMTL_INLINE constexpr auto CartesianCoordSys2D<SU, CU, TU, Formatter>::line(HDC hdc, ClientUnit fromX, ClientUnit fromY, ClientUnit toX, ClientUnit toY) const noexcept {
+MYMTL_INLINE constexpr auto CartesianCoordSys2D<SU, CU, TU, Formatter>::line(Rasteriser r, ClientUnit fromX, ClientUnit fromY, ClientUnit toX, ClientUnit toY) const noexcept {
 	const auto from = space_.clientToScreenPoint(fromX, fromY);
 	const auto to = space_.clientToScreenPoint(toX, toY);
 
-	return rasteriser_.line(hdc, static_cast<SU>(from.x), static_cast<SU>(from.y), static_cast<SU>(to.x), static_cast<SU>(to.y));
+	return r.line(static_cast<SU>(from.x), static_cast<SU>(from.y), static_cast<SU>(to.x), static_cast<SU>(to.y));
 }
 
 template<typename SU, typename CU, typename TU, typename Formatter>
-MYMTL_INLINE constexpr auto CartesianCoordSys2D<SU, CU, TU, Formatter>::setPixel(HDC hdc, ClientUnit x, ClientUnit y, unsigned long colour) const noexcept {
+MYMTL_INLINE constexpr auto CartesianCoordSys2D<SU, CU, TU, Formatter>::setPixel(Rasteriser r, ClientUnit x, ClientUnit y, unsigned long colour) const noexcept {
 	const auto sv = space_.clientToScreenPoint(x, y);
 
-	return rasteriser_.setPixel(hdc, static_cast<SU>(sv.x), static_cast<SU>(sv.y), colour);
+	return r.setPixel(static_cast<SU>(sv.x), static_cast<SU>(sv.y), colour);
 }
 
 template<typename SU, typename CU, typename TU, typename Formatter>
-MYMTL_INLINE constexpr auto CartesianCoordSys2D<SU, CU, TU, Formatter>::ellipse(HDC hdc, ClientUnit left, ClientUnit top, ClientUnit right, ClientUnit bottom) const noexcept {
+MYMTL_INLINE constexpr auto CartesianCoordSys2D<SU, CU, TU, Formatter>::ellipse(Rasteriser r, ClientUnit left, ClientUnit top, ClientUnit right, ClientUnit bottom) const noexcept {
 	const auto tl = space_.clientToScreenPoint(left, top);
 	const auto rb = space_.clientToScreenPoint(right, bottom);
 
-	return rasteriser_.ellipse(hdc, static_cast<SU>(tl.x), static_cast<SU>(tl.y), static_cast<SU>(rb.x), static_cast<SU>(rb.y));
+	return r.ellipse(static_cast<SU>(tl.x), static_cast<SU>(tl.y), static_cast<SU>(rb.x), static_cast<SU>(rb.y));
 }
 
 template<typename SU, typename CU, typename TU, typename Formatter>
-MYMTL_INLINE constexpr void CartesianCoordSys2D<SU, CU, TU, Formatter>::draw(HDC hdc) const noexcept {
+MYMTL_INLINE constexpr void CartesianCoordSys2D<SU, CU, TU, Formatter>::draw(Rasteriser r) const noexcept {
 	for (const auto& axis : axes_) {
-		axis.draw(hdc, rasteriser_, space_);
+		axis.draw(r, space_);
 	}
 }
 

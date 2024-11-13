@@ -58,19 +58,19 @@ using Matrix3d = Matrix3<double>;
 
 // Calculates length of the vector
 template<typename R, typename T, std::size_t N>
-	requires (N > 0) && NumericType<R>&& Multipliable<T, T>
+    requires (N > 0) && NumericType<R>&& Multipliable<T, T>
 MYMTL_NO_DISCARD constexpr decltype(std::sqrt(std::declval<R>())) vector_magnitude_ert(const VectorN<T, N>& v) noexcept(noexcept(std::sqrt(std::declval<R>())));
 
 template<typename T, std::size_t N, typename R = decltype(std::declval<T>()* std::declval<T>())>
-	requires (N > 0) && NumericType<R>&& Multipliable<T, T>
+    requires (N > 0) && NumericType<R>&& Multipliable<T, T>
 MYMTL_NO_DISCARD constexpr decltype(std::sqrt(std::declval<R>())) vector_magnitude(const VectorN<T, N>& v) noexcept(noexcept(std::sqrt(std::declval<R>())));
 
 template<typename R, typename T>
-	requires NumericType<T>
+    requires NumericType<T>
 MYMTL_NO_DISCARD constexpr R vector_magnitude_ert(const VectorN<T, 1>& v) noexcept(std::is_nothrow_assignable_v<T, T>);
 
 template<typename T>
-	requires NumericType<T>
+    requires NumericType<T>
 MYMTL_NO_DISCARD constexpr T vector_magnitude(const VectorN<T, 1>& v) noexcept(std::is_nothrow_assignable_v<T, T>);
 
 //------------------------------------------------------------------------------
@@ -79,18 +79,18 @@ MYMTL_NO_DISCARD constexpr T vector_magnitude(const VectorN<T, 1>& v) noexcept(s
 // Return parallel vector with the unit length
 //------------------------------------------------------------------------------
 template<typename R, typename T, std::size_t N>
-	requires (N > 0) && NumericType<R>&& Multipliable<T, T>
+    requires (N > 0) && NumericType<R>&& Multipliable<T, T>
 MYMTL_NO_DISCARD constexpr VectorN<decltype(std::declval<T>() / std::sqrt(std::declval<R>())), N> vector_normalize_ert(const VectorN<T, N>& v) noexcept(noexcept(std::declval<T>() / std::sqrt(std::declval<R>())));
 
 template<typename T, std::size_t N, typename R = decltype(std::declval<T>()* std::declval<T>())>
-	requires (N > 0) && NumericType<R>&& Multipliable<T, T>
+    requires (N > 0) && NumericType<R>&& Multipliable<T, T>
 MYMTL_NO_DISCARD constexpr VectorN<decltype(std::declval<T>() / std::sqrt(std::declval<R>())), N> vector_normalize(const VectorN<T, N>& v) noexcept(noexcept(std::declval<T>() / std::sqrt(std::declval<R>())));
 
 //template<typename T>
 //auto vector_normalize( const Vector4< T >& v, Vector4< T >& ulv ) noexcept;
 //------------------------------------------------------------------------------
 template<typename R, typename T>
-	requires NumericType<R>
+    requires NumericType<R>
 MYMTL_NO_DISCARD constexpr VectorN<R, 2> vector_normal_ert(const VectorN<T, 2>& v) noexcept;
 
 template<typename T>
@@ -99,27 +99,27 @@ MYMTL_NO_DISCARD constexpr VectorN<T, 2> vector_normal(const VectorN<T, 2>& v) n
 
 // Transforms a vector by a given matrix
 template< typename R, typename T, typename U, ::std::size_t N, ::std::size_t M>
-	requires (N* M != 0) && NumericType<R>&& NumericType<T>&& NumericType<U>
+    requires (N* M != 0) && NumericType<R>&& NumericType<T>&& NumericType<U>
 MYMTL_NO_DISCARD constexpr VectorN<R, M> vector_transform_ert(const VectorN<T, N>& v, const MatrixNxM<U, N, M>& m) noexcept(noexcept(std::declval<T>()* std::declval<U>()));
 
 template< typename T, typename U, typename R = decltype(std::declval<T>()* std::declval<U>()), ::std::size_t N, ::std::size_t M>
-	requires (N* M != 0) && NumericType<R>&& NumericType<T>&& NumericType<U>
+    requires (N* M != 0) && NumericType<R>&& NumericType<T>&& NumericType<U>
 MYMTL_NO_DISCARD constexpr VectorN<R, M> vector_transform(const VectorN<T, N>& v, const MatrixNxM<U, N, M>& m) noexcept(noexcept(std::declval<T>()* std::declval<U>()));
 
 template< typename R, typename X, typename Y, typename Z, typename T>
-	requires NumericType<X>&& NumericType<Y>&& NumericType<Z>&& NumericType<T>
+    requires NumericType<X>&& NumericType<Y>&& NumericType<Z>&& NumericType<T>
 MYMTL_NO_DISCARD constexpr Vector3<R> vector_transform_ert(X x, Y y, Z z, const Matrix3<T>& m) noexcept;
 
 template< typename X, typename Y, typename Z, typename T, typename R = decltype(std::declval<T>()* std::declval<X>() + std::declval<T>() * std::declval<Y>() + std::declval<T>() * std::declval<Z>())>
-	requires NumericType<X>&& NumericType<Y>&& NumericType<Z>&& NumericType<T>
+    requires NumericType<X>&& NumericType<Y>&& NumericType<Z>&& NumericType<T>
 MYMTL_NO_DISCARD constexpr Vector3<R> vector_transform(X x, Y y, Z z, const Matrix3<T>& m) noexcept;
 
 template<typename R, typename S, typename T>
-	requires NumericType<S>&& NumericType<T>
+    requires NumericType<S>&& NumericType<T>
 MYMTL_NO_DISCARD constexpr Vector3<R> vector_transform_ert(const Vector3<S>& v, const Matrix3<T>& m) noexcept(noexcept(std::declval<S>()* std::declval<T>()));
 
 template<typename S, typename T, typename R = decltype(std::declval<T>()* std::declval<S>())>
-	requires NumericType<S>&& NumericType<T>
+    requires NumericType<S>&& NumericType<T>
 MYMTL_NO_DISCARD constexpr Vector3<R> vector_transform(const Vector3<S>& v, const Matrix3<T>& m) noexcept(noexcept(std::declval<S>()* std::declval<T>()));
 
 
@@ -128,36 +128,36 @@ MYMTL_NO_DISCARD constexpr Vector3<R> vector_transform(const Vector3<S>& v, cons
 //Vector4<T>& VectorTransform( Vector4<T>& res, const Vector4<U>& v, const Matrix4<T>& m );
 
 template<typename T, typename U>
-	requires NumericType<U>&& NumericType<T>
+    requires NumericType<U>&& NumericType<T>
 constexpr Vector3<U>& vector_barycentric(Vector3<U>& bc, const Vector2<T>& a, const Vector2<T>& b, const Vector2<T>& c, const Vector2<T>& p) noexcept;
 
 template<typename T>
-	requires NumericType<T>
+    requires NumericType<T>
 MYMTL_NO_DISCARD constexpr Vector3<T> vector_barycentric(const Vector2<T>& a, const Vector2<T>& b, const Vector2<T>& c, const Vector2<T>& p) noexcept;
 
 template<typename T, typename U>
-	requires NumericType<U>&& NumericType<T>
+    requires NumericType<U>&& NumericType<T>
 constexpr Vector3<U>& vector_barycentric(Vector3<U>& barycentric, const Vector3<T>& a, const Vector3<T>& b, const Vector3<T>& c, const Vector3<T>& p) noexcept;
 
 template<typename T>
-	requires NumericType<T>
+    requires NumericType<T>
 MYMTL_NO_DISCARD constexpr Vector3<T> vector_barycentric(const Vector3<T>& a, const Vector3<T>& b, const Vector3<T>& c, const Vector3<T>& p) noexcept;
 
 // This function transforms the vector, pV (x, y, z, 1), by the matrix, pM,
 // projecting the result back into w=1
 //	GVector3D& VectorTransformCoord( GVector3D &res, const GVector3D &v, const Matrix4 &m );
 
-	// Transforms the 3-D vector normal by the given matrix
+    // Transforms the 3-D vector normal by the given matrix
 //	GVector3D& VectorTransformNormal( GVector3D &res, const GVector3D &v, const Matrix4 &m );
 
-	// This function transforms the vector, v(x, y, 1), by the matrix, m,
-	// projecting the result back into z=1
-	//GVector2D& VectorTransformCoord( GVector2D &res, const GVector2D &v, const GMatrix3x3 &m );
+    // This function transforms the vector, v(x, y, 1), by the matrix, m,
+    // projecting the result back into z=1
+    //GVector2D& VectorTransformCoord( GVector2D &res, const GVector2D &v, const GMatrix3x3 &m );
 
-	// Transforms the 2-D vector normal by the given matrix
-	//GVector2D& VectorTransformNormal( GVector2D &res, const GVector2D &v, const GMatrix3x3 &m );
+    // Transforms the 2-D vector normal by the given matrix
+    //GVector2D& VectorTransformNormal( GVector2D &res, const GVector2D &v, const GMatrix3x3 &m );
 
-	//GVector3D QuaternionToVector( const CQuaternion& q );
+    //GVector3D QuaternionToVector( const CQuaternion& q );
 
 
 //------------------------------------------------------------------------------
@@ -166,25 +166,25 @@ MYMTL_NO_DISCARD constexpr Vector3<T> vector_barycentric(const Vector3<T>& a, co
 //
 //------------------------------------------------------------------------------
 
-	// Returns dot product of plane's equation and 4D vector
-	//gfloat PlaneDot( const GPlane3D &plane, const GVector4D vector );
+    // Returns dot product of plane's equation and 4D vector
+    //gfloat PlaneDot( const GPlane3D &plane, const GVector4D vector );
 
-	// Computes dot product between plane and 3D vector i.e.
-	// given a plane (a, b, c, d) and a 3-D vector (x, y, z)
-	// the return value of this function is a*x + b*y + c*z + d*1
-	//gfloat PlaneDotCoord( const GPlane3D &p, const GVector3D &v );
+    // Computes dot product between plane and 3D vector i.e.
+    // given a plane (a, b, c, d) and a 3-D vector (x, y, z)
+    // the return value of this function is a*x + b*y + c*z + d*1
+    //gfloat PlaneDotCoord( const GPlane3D &p, const GVector3D &v );
 
-	// Computes dot product between plane and 3D vector
-	// given a plane (a, b, c, d) and a 3-D vector (x, y, z)
-	// the return value of this function is a*x + b*y + c*z + d*0
-	//gfloat PlaneDotNormal( const GPlane3D &p, const GVector3D &v );
+    // Computes dot product between plane and 3D vector
+    // given a plane (a, b, c, d) and a 3-D vector (x, y, z)
+    // the return value of this function is a*x + b*y + c*z + d*0
+    //gfloat PlaneDotNormal( const GPlane3D &p, const GVector3D &v );
 
-	// Normalizes the plane coefficients so that the plane normal has unit length
-	// This function normalizes a plane so that |a,b,c| == 1
-	//GPlane3D& PlaneNormalize( GPlane3D &res, const GPlane3D &p );
+    // Normalizes the plane coefficients so that the plane normal has unit length
+    // This function normalizes a plane so that |a,b,c| == 1
+    //GPlane3D& PlaneNormalize( GPlane3D &res, const GPlane3D &p );
 
-	// Constructs a plane from a point and a normal
-	//GPlane3D& PlaneFromPointNormal( GPlane3D &res, const GVector3D &p, const GVector3D &n );
+    // Constructs a plane from a point and a normal
+    //GPlane3D& PlaneFromPointNormal( GPlane3D &res, const GVector3D &p, const GVector3D &n );
 
 
 //------------------------------------------------------------------------------
@@ -193,28 +193,28 @@ MYMTL_NO_DISCARD constexpr Vector3<T> vector_barycentric(const Vector3<T>& a, co
 //
 //------------------------------------------------------------------------------
 template<typename T, ::std::size_t N, ::std::size_t M>
-	requires (N* M != 0) && NumericType<T>
+    requires (N* M != 0) && NumericType<T>
 MYMTL_NO_DISCARD constexpr MatrixNxM<T, N, M> zero_matrix() noexcept;
 
 
 template<typename T, ::std::size_t N>
-	requires (N > 0) && NumericType<T>
+    requires (N > 0) && NumericType<T>
 MYMTL_NO_DISCARD constexpr MatrixN<T, N> identity_matrix() noexcept;
 
 template<typename T>
-	requires NumericType<T>
+    requires NumericType<T>
 MYMTL_NO_DISCARD constexpr MatrixN<T, 1> identity_matrix() noexcept;
 
 template<typename T>
-	requires NumericType<T>
+    requires NumericType<T>
 MYMTL_NO_DISCARD constexpr MatrixN<T, 2> identity_matrix() noexcept;
 
 template<typename T>
-	requires NumericType<T>
+    requires NumericType<T>
 MYMTL_NO_DISCARD constexpr MatrixN<T, 3> identity_matrix() noexcept;
 
 template<typename T>
-	requires NumericType<T>
+    requires NumericType<T>
 MYMTL_NO_DISCARD constexpr MatrixN<T, 4> identity_matrix() noexcept;
 
 template<typename T, typename U = T>

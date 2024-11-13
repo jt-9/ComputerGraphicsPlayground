@@ -20,55 +20,55 @@ MYMTL_NS_BEGIN
 //
 //------------------------------------------------------------------------------
 template<typename R, typename T, std::size_t N>
-	requires (N > 0) && NumericType<R>&& Multipliable<T, T>
+    requires (N > 0) && NumericType<R>&& Multipliable<T, T>
 MYMTL_INLINE constexpr decltype(std::sqrt(std::declval<R>())) vector_magnitude_ert(const VectorN<T, N>& v) noexcept(noexcept(std::sqrt(std::declval<R>()))) {
-	return static_cast<R>(std::sqrt(vector_dot(v, v, R{})));
+    return static_cast<R>(std::sqrt(vector_dot(v, v, R{})));
 }
 
 template<typename T, std::size_t N, typename R>
-	requires (N > 0) && NumericType<R>&& Multipliable<T, T>
+    requires (N > 0) && NumericType<R>&& Multipliable<T, T>
 MYMTL_INLINE constexpr decltype(std::sqrt(std::declval<R>())) vector_magnitude(const VectorN<T, N>& v) noexcept(noexcept(std::sqrt(std::declval<R>()))) {
-	return std::sqrt(vector_dot(v, v, R{}));
+    return std::sqrt(vector_dot(v, v, R{}));
 }
 
 template<typename R, typename T>
-	requires NumericType<T>
+    requires NumericType<T>
 MYMTL_INLINE constexpr R vector_magnitude_ert(const VectorN<T, 1>& v) noexcept(std::is_nothrow_assignable_v<T, T>) {
-	return static_cast<R>(v.x);
+    return static_cast<R>(v.x);
 }
 
 template<typename T>
-	requires NumericType<T>
+    requires NumericType<T>
 MYMTL_INLINE constexpr T vector_magnitude(const VectorN<T, 1>& v) noexcept(std::is_nothrow_assignable_v<T, T>) {
-	return v.x;
+    return v.x;
 }
 
 
 
 // Return parallel vector with the unit length
 template<typename R, typename T, std::size_t N>
-	requires (N > 0) && NumericType<R>&& Multipliable<T, T>
+    requires (N > 0) && NumericType<R>&& Multipliable<T, T>
 MYMTL_INLINE constexpr VectorN<decltype(std::declval<T>() / std::sqrt(std::declval<R>())), N> vector_normalize_ert(const VectorN<T, N>& v) noexcept(noexcept(std::declval<T>() / std::sqrt(std::declval<R>()))) {
-	return v / vector_magnitude_ert<R>(v);
+    return v / vector_magnitude_ert<R>(v);
 }
 
 template<typename T, std::size_t N, typename R>
-	requires (N > 0) && NumericType<R>&& Multipliable<T, T>
+    requires (N > 0) && NumericType<R>&& Multipliable<T, T>
 MYMTL_INLINE constexpr VectorN<decltype(std::declval<T>() / std::sqrt(std::declval<R>())), N> vector_normalize(const VectorN<T, N>& v) noexcept(noexcept(std::declval<T>() / std::sqrt(std::declval<R>()))) {
-	return v / vector_magnitude_ert<R>(v);
+    return v / vector_magnitude_ert<R>(v);
 }
 
 
 
 template<typename R, typename T>
-	requires NumericType<R>
+    requires NumericType<R>
 MYMTL_INLINE constexpr VectorN<R, 2> vector_normal_ert(const VectorN<T, 2>& v) noexcept {
-	return { static_cast<R>(-v.y), static_cast<R>(v.x) };
+    return { static_cast<R>(-v.y), static_cast<R>(v.x) };
 }
 
 template<typename T>
 MYMTL_INLINE constexpr VectorN<T, 2> vector_normal(const VectorN<T, 2>& v) noexcept {
-	return { -v.y, v.x };
+    return { -v.y, v.x };
 }
 
 //template<typename T>
@@ -79,55 +79,55 @@ MYMTL_INLINE constexpr VectorN<T, 2> vector_normal(const VectorN<T, 2>& v) noexc
 //}
 
 template<typename R, typename T, typename U, ::std::size_t N, ::std::size_t M>
-	requires (N* M != 0) && NumericType<R>&& NumericType<T>&& NumericType<U>
+    requires (N* M != 0) && NumericType<R>&& NumericType<T>&& NumericType<U>
 MYMTL_INLINE constexpr VectorN<R, M> vector_transform_ert(const VectorN<T, N>& v, const MatrixNxM<U, N, M>& m) noexcept(noexcept(std::declval<T>()* std::declval<U>())) {
-	VectorN<R, M>res{};
+    VectorN<R, M>res{};
 
-	for (std::remove_cv_t<decltype(m.rows())> k = 0; k < m.rows(); k++) {
-		for (std::remove_cv_t<decltype(m.cols())> j = 0; j < m.cols(); j++) {
-			res[j] += static_cast<R>(v[k]) * m(k, j);
-		}
-	}
+    for (std::remove_cv_t<decltype(m.rows())> k = 0; k < m.rows(); k++) {
+        for (std::remove_cv_t<decltype(m.cols())> j = 0; j < m.cols(); j++) {
+            res[j] += static_cast<R>(v[k]) * m(k, j);
+        }
+    }
 
-	return res;
+    return res;
 }
 
 template<typename T, typename U, typename R, ::std::size_t N, ::std::size_t M>
-	requires (N* M != 0) && NumericType<R>&& NumericType<T>&& NumericType<U>
+    requires (N* M != 0) && NumericType<R>&& NumericType<T>&& NumericType<U>
 MYMTL_INLINE constexpr VectorN<R, M> vector_transform(const VectorN<T, N>& v, const MatrixNxM<U, N, M>& m) noexcept(noexcept(std::declval<T>()* std::declval<U>())) {
-	return vector_transform_ert<R>(v, m);
+    return vector_transform_ert<R>(v, m);
 }
 
 template< typename R, typename X, typename Y, typename Z, typename T>
-	requires NumericType<X>&& NumericType<Y>&& NumericType<Z>&& NumericType<T>
+    requires NumericType<X>&& NumericType<Y>&& NumericType<Z>&& NumericType<T>
 MYMTL_INLINE constexpr Vector3<R> vector_transform_ert(X x, Y y, Z z, const Matrix3<T>& m) noexcept {
-	return Vector3<R> {
-		.x = static_cast<R>(x) * m(0, 0) + static_cast<R>(y) * m(1, 0) + static_cast<R>(z) * m(2, 0),
-			.y = static_cast<R>(x) * m(0, 1) + static_cast<R>(y) * m(1, 1) + static_cast<R>(z) * m(2, 1),
-			.z = static_cast<R>(x) * m(0, 2) + static_cast<R>(y) * m(1, 2) + static_cast<R>(z) * m(2, 2)
-	};
+    return Vector3<R> {
+        .x = static_cast<R>(x) * m(0, 0) + static_cast<R>(y) * m(1, 0) + static_cast<R>(z) * m(2, 0),
+            .y = static_cast<R>(x) * m(0, 1) + static_cast<R>(y) * m(1, 1) + static_cast<R>(z) * m(2, 1),
+            .z = static_cast<R>(x) * m(0, 2) + static_cast<R>(y) * m(1, 2) + static_cast<R>(z) * m(2, 2)
+    };
 }
 
 template<typename X, typename Y, typename Z, typename T, typename R>
-	requires NumericType<X>&& NumericType<Y>&& NumericType<Z>&& NumericType<T>
+    requires NumericType<X>&& NumericType<Y>&& NumericType<Z>&& NumericType<T>
 MYMTL_INLINE constexpr Vector3<R> vector_transform(X x, Y y, Z z, const Matrix3<T>& m) noexcept {
-	return Vector3<R> {
-		.x = x * m(0, 0) + y * m(1, 0) + z * m(2, 0),
-			.y = x * m(0, 1) + y * m(1, 1) + z * m(2, 1),
-			.z = x * m(0, 2) + y * m(1, 2) + z * m(2, 2)
-	};
+    return Vector3<R> {
+        .x = x * m(0, 0) + y * m(1, 0) + z * m(2, 0),
+            .y = x * m(0, 1) + y * m(1, 1) + z * m(2, 1),
+            .z = x * m(0, 2) + y * m(1, 2) + z * m(2, 2)
+    };
 }
 
 template<typename R, typename S, typename T>
-	requires NumericType<S>&& NumericType<T>
+    requires NumericType<S>&& NumericType<T>
 MYMTL_INLINE constexpr Vector3<R> vector_transform_ert(const Vector3<S>& v, const Matrix3<T>& m) noexcept(noexcept(std::declval<S>()* std::declval<T>())) {
-	return vector_transform_ert<R>(v.x, v.y, v.z, m);
+    return vector_transform_ert<R>(v.x, v.y, v.z, m);
 }
 
 template<typename S, typename T, typename R>
-	requires NumericType<S>&& NumericType<T>
+    requires NumericType<S>&& NumericType<T>
 MYMTL_INLINE constexpr Vector3<R> vector_transform(const Vector3<S>& v, const Matrix3<T>& m) noexcept(noexcept(std::declval<S>()* std::declval<T>())) {
-	return vector_transform(v.x, v.y, v.z, m);
+    return vector_transform(v.x, v.y, v.z, m);
 }
 
 
@@ -144,65 +144,65 @@ MYMTL_INLINE constexpr Vector3<R> vector_transform(const Vector3<S>& v, const Ma
 //	return Vec3f(-1, 1, 1); // in this case generate negative coordinates, it will be thrown away by the rasterizator
 //}
 template<typename T, typename U>
-	requires NumericType<U>&& NumericType<T>
+    requires NumericType<U>&& NumericType<T>
 MYMTL_INLINE constexpr Vector3<U>& vector_barycentric(Vector3<U>& barycentric, const Vector2<T>& a, const Vector2<T>& b, const Vector2<T>& c, const Vector2<T>& p) noexcept {
-	const auto cross = vector_cross(Vector3<T>{ b.x - a.x, c.x - a.x, a.x - p.x }, Vector3<T>{ b.y - a.y, c.y - a.y, a.y - p.y });
+    const auto cross = vector_cross(Vector3<T>{ b.x - a.x, c.x - a.x, a.x - p.x }, Vector3<T>{ b.y - a.y, c.y - a.y, a.y - p.y });
 
-	barycentric.y = static_cast<U>(cross.x) / cross.z;
-	barycentric.z = static_cast<U>(cross.y) / cross.z;
-	barycentric.x = 1 - barycentric.y - barycentric.z;
+    barycentric.y = static_cast<U>(cross.x) / cross.z;
+    barycentric.z = static_cast<U>(cross.y) / cross.z;
+    barycentric.x = 1 - barycentric.y - barycentric.z;
 
-	return barycentric;
+    return barycentric;
 }
 
 template<typename T>
-	requires NumericType<T>
+    requires NumericType<T>
 MYMTL_INLINE constexpr Vector3<T> vector_barycentric(const Vector2<T>& a, const Vector2<T>& b, const Vector2<T>& c, const Vector2<T>& p) noexcept {
-	const auto cross = vector_cross(Vector3<T>{ b.x - a.x, c.x - a.x, a.x - p.x }, Vector3<T>{ b.y - a.y, c.y - a.y, a.y - p.y });
+    const auto cross = vector_cross(Vector3<T>{ b.x - a.x, c.x - a.x, a.x - p.x }, Vector3<T>{ b.y - a.y, c.y - a.y, a.y - p.y });
 
-	Vector3<T> barycentric{ .x = 0, .y = cross.x / cross.z, .z = cross.y / cross.z };
-	barycentric.x = 1 - barycentric.y - barycentric.z;
+    Vector3<T> barycentric{ .x = 0, .y = cross.x / cross.z, .z = cross.y / cross.z };
+    barycentric.x = 1 - barycentric.y - barycentric.z;
 
-	return barycentric;
+    return barycentric;
 }
 
 // Assumes counterclockwise direction
 template<typename T, typename U>
-	requires NumericType<U>&& NumericType<T>
+    requires NumericType<U>&& NumericType<T>
 MYMTL_INLINE constexpr Vector3<U>& vector_barycentric(Vector3<U>& barycentric, const Vector3<T>& a, const Vector3<T>& b, const Vector3<T>& c, const Vector3<T>& p) noexcept {
-	//n = (b - a) cross_product (c - a)
-	const auto normalABC = vector_cross(b - a, c - a);
-	//na = (c - b) cross_product (p - b)
-	const auto normalBCP = vector_cross(c - b, p - b);
-	//nb = (a - c) cross_product (p - c)
-	const auto normalCAP = vector_cross(a - c, p - c);
-	//nc = (b - a) cross_product (p - a)
-	const auto normalABP = vector_cross(b - a, p - a);
+    //n = (b - a) cross_product (c - a)
+    const auto normalABC = vector_cross(b - a, c - a);
+    //na = (c - b) cross_product (p - b)
+    const auto normalBCP = vector_cross(c - b, p - b);
+    //nb = (a - c) cross_product (p - c)
+    const auto normalCAP = vector_cross(a - c, p - c);
+    //nc = (b - a) cross_product (p - a)
+    const auto normalABP = vector_cross(b - a, p - a);
 
-	const auto normalABCSqr = static_cast<U>(vector_dot(normalABC, normalABC));
-	barycentric.x = vector_dot(normalABC, normalBCP) / normalABCSqr;
-	barycentric.y = vector_dot(normalABC, normalCAP) / normalABCSqr;
-	barycentric.z = vector_dot(normalABC, normalABP) / normalABCSqr;
+    const auto normalABCSqr = static_cast<U>(vector_dot(normalABC, normalABC));
+    barycentric.x = vector_dot(normalABC, normalBCP) / normalABCSqr;
+    barycentric.y = vector_dot(normalABC, normalCAP) / normalABCSqr;
+    barycentric.z = vector_dot(normalABC, normalABP) / normalABCSqr;
 
-	return barycentric;
+    return barycentric;
 }
 
 template<typename T>
-	requires NumericType<T>
+    requires NumericType<T>
 MYMTL_INLINE constexpr Vector3<T> vector_barycentric(const Vector3<T>& a, const Vector3<T>& b, const Vector3<T>& c, const Vector3<T>& p) noexcept {
-	//n = (b - a) cross_product (c - a)
-	const auto normalABC = vector_cross(b - a, c - a);
-	//na = (c - b) cross_product (p - b)
-	const auto normalBCP = vector_cross(c - b, p - b);
-	//nb = (a - c) cross_product (p - c)
-	const auto normalCAP = vector_cross(a - c, p - c);
-	//nc = (b - a) cross_product (p - a)
-	const auto normalABP = vector_cross(b - a, p - a);
+    //n = (b - a) cross_product (c - a)
+    const auto normalABC = vector_cross(b - a, c - a);
+    //na = (c - b) cross_product (p - b)
+    const auto normalBCP = vector_cross(c - b, p - b);
+    //nb = (a - c) cross_product (p - c)
+    const auto normalCAP = vector_cross(a - c, p - c);
+    //nc = (b - a) cross_product (p - a)
+    const auto normalABP = vector_cross(b - a, p - a);
 
-	const auto normalABCSqr = vector_dot(normalABC, normalABC);
-	return Vector3<T> {
-		.x = vector_dot(normalABC, normalBCP) / normalABCSqr, .y = vector_dot(normalABC, normalCAP) / normalABCSqr, .z = vector_dot(normalABC, normalABP) / normalABCSqr
-	};
+    const auto normalABCSqr = vector_dot(normalABC, normalABC);
+    return Vector3<T> {
+        .x = vector_dot(normalABC, normalBCP) / normalABCSqr, .y = vector_dot(normalABC, normalCAP) / normalABCSqr, .z = vector_dot(normalABC, normalABP) / normalABCSqr
+    };
 }
 
 //inline GVector4D& VectorTransform( GVector4D &res, const GVector4D &v, const Matrix4 &m )
@@ -277,57 +277,57 @@ MYMTL_INLINE constexpr Vector3<T> vector_barycentric(const Vector3<T>& a, const 
 // Functions for matrix
 //------------------------------------------------------------------------------
 template<typename T, ::std::size_t N, ::std::size_t M>
-	requires (N* M != 0) && NumericType<T>
+    requires (N* M != 0) && NumericType<T>
 MYMTL_INLINE constexpr MatrixNxM<T, N, M> zero_matrix() noexcept {
-	return MatrixNxM<T, N, M>{ static_cast<T>(0) };
+    return MatrixNxM<T, N, M>{ static_cast<T>(0) };
 }
 
 template<typename T, ::std::size_t N>
-	requires (N > 0) && NumericType<T>
+    requires (N > 0) && NumericType<T>
 MYMTL_INLINE constexpr MatrixN<T, N> identity_matrix() noexcept {
-	auto m = zero_matrix<T, N, N>();
+    auto m = zero_matrix<T, N, N>();
 
-	for (std::remove_cv_t<decltype(m.rows())> k = 0; k < m.rows(); k++) {
-		m(k, k) = static_cast<T>(1);
-	}
+    for (std::remove_cv_t<decltype(m.rows())> k = 0; k < m.rows(); k++) {
+        m(k, k) = static_cast<T>(1);
+    }
 
-	return m;
+    return m;
 }
 
 template<typename T>
-	requires NumericType<T>
+    requires NumericType<T>
 MYMTL_INLINE constexpr MatrixN<T, 1> identity_matrix() noexcept {
-	return MatrixN<T, 1> {1};
+    return MatrixN<T, 1> {1};
 }
 
 template<typename T>
-	requires NumericType<T>
+    requires NumericType<T>
 MYMTL_INLINE constexpr MatrixN<T, 2> identity_matrix() noexcept {
-	return MatrixN<T, 2> {
-		1, 0,
-			0, 1
-	};
+    return MatrixN<T, 2> {
+        1, 0,
+            0, 1
+    };
 }
 
 template<typename T>
-	requires NumericType<T>
+    requires NumericType<T>
 MYMTL_INLINE constexpr MatrixN<T, 3> identity_matrix() noexcept {
-	return MatrixN<T, 3> {
-		1, 0, 0,
-			0, 1, 0,
-			0, 0, 1
-	};
+    return MatrixN<T, 3> {
+        1, 0, 0,
+            0, 1, 0,
+            0, 0, 1
+    };
 }
 
 template<typename T>
-	requires NumericType<T>
+    requires NumericType<T>
 MYMTL_INLINE constexpr MatrixN<T, 4> identity_matrix() noexcept {
-	return MatrixN<T, 4> {
-		1, 0, 0, 0,
-			0, 1, 0, 0,
-			0, 0, 1, 0,
-			0, 0, 0, 1
-	};
+    return MatrixN<T, 4> {
+        1, 0, 0, 0,
+            0, 1, 0, 0,
+            0, 0, 1, 0,
+            0, 0, 0, 1
+    };
 }
 
 //
@@ -472,35 +472,35 @@ MYMTL_INLINE constexpr MatrixN<T, 4> identity_matrix() noexcept {
 
 template<typename T, typename U>
 MYMTL_INLINE constexpr auto inverse_matrix(Matrix3<U>& res, U* det, const Matrix3<T>& m) noexcept {
-	res(0, 0) = m(1, 1) * m(2, 2) - m(2, 1) * m(1, 2);
-	res(0, 1) = -m(0, 1) * m(2, 2) + m(2, 1) * m(0, 2);
-	res(0, 2) = m(0, 1) * m(1, 2) - m(1, 1) * m(0, 2);
+    res(0, 0) = m(1, 1) * m(2, 2) - m(2, 1) * m(1, 2);
+    res(0, 1) = -m(0, 1) * m(2, 2) + m(2, 1) * m(0, 2);
+    res(0, 2) = m(0, 1) * m(1, 2) - m(1, 1) * m(0, 2);
 
-	const auto d = m(0, 0) * res(0, 0) + m(1, 0) * res(0, 1) + m(2, 0) * res(0, 2);
+    const auto d = m(0, 0) * res(0, 0) + m(1, 0) * res(0, 1) + m(2, 0) * res(0, 2);
 
-	// If det is not null then copy matrix determinant to det
-	if (det) {
-		*det = static_cast<U>(d);
-	}
+    // If det is not null then copy matrix determinant to det
+    if (det) {
+        *det = static_cast<U>(d);
+    }
 
-	// If d is almost zero, return null pointer 
-	if (abs(d) < kEps) {
-		return false;
-	}
+    // If d is almost zero, return null pointer 
+    if (abs(d) < kEps) {
+        return false;
+    }
 
-	res(0, 0) /= d;
-	res(0, 1) /= d;
-	res(0, 2) /= d;
+    res(0, 0) /= d;
+    res(0, 1) /= d;
+    res(0, 2) /= d;
 
-	res(1, 0) = (-m(1, 0) * m(2, 2) + m(2, 0) * m(1, 2)) / d;
-	res(1, 1) = (m(0, 0) * m(2, 2) - m(2, 0) * m(0, 2)) / d;
-	res(1, 2) = (-m(0, 0) * m(1, 2) + m(1, 0) * m(0, 2)) / d;
+    res(1, 0) = (-m(1, 0) * m(2, 2) + m(2, 0) * m(1, 2)) / d;
+    res(1, 1) = (m(0, 0) * m(2, 2) - m(2, 0) * m(0, 2)) / d;
+    res(1, 2) = (-m(0, 0) * m(1, 2) + m(1, 0) * m(0, 2)) / d;
 
-	res(2, 0) = (m(1, 0) * m(2, 1) - m(2, 0) * m(1, 1)) / d;
-	res(2, 1) = (-m(0, 0) * m(2, 1) + m(2, 0) * m(0, 1)) / d;
-	res(2, 2) = (m(0, 0) * m(1, 1) - m(1, 0) * m(0, 1)) / d;
+    res(2, 0) = (m(1, 0) * m(2, 1) - m(2, 0) * m(1, 1)) / d;
+    res(2, 1) = (-m(0, 0) * m(2, 1) + m(2, 0) * m(0, 1)) / d;
+    res(2, 2) = (m(0, 0) * m(1, 1) - m(1, 0) * m(0, 1)) / d;
 
-	return true;
+    return true;
 }
 
 // Builds a matrix that scales along the x-axis, the y-axis, and the z-axis

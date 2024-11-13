@@ -81,13 +81,13 @@ public:
 
 	constexpr void recalculateTransformation() noexcept;
 
-	constexpr auto moveTo(HDC hdc, ClientUnit x, ClientUnit y) const noexcept;
-	constexpr auto lineTo(HDC hdc, ClientUnit x, ClientUnit y) const noexcept;
-	constexpr auto line(HDC hdc, ClientUnit fromX, ClientUnit fromY, ClientUnit toX, ClientUnit toY) const noexcept;
-	constexpr auto setPixel(HDC hdc, ClientUnit x, ClientUnit y, unsigned long colour) const noexcept;
-	constexpr auto ellipse(HDC hdc, ClientUnit left, ClientUnit top, ClientUnit right, ClientUnit bottom) const noexcept;
+	constexpr auto moveTo(Rasteriser r, ClientUnit x, ClientUnit y) const noexcept;
+	constexpr auto lineTo(Rasteriser r, ClientUnit x, ClientUnit y) const noexcept;
+	constexpr auto line(Rasteriser r, ClientUnit fromX, ClientUnit fromY, ClientUnit toX, ClientUnit toY) const noexcept;
+	constexpr auto setPixel(Rasteriser r, ClientUnit x, ClientUnit y, unsigned long colour) const noexcept;
+	constexpr auto ellipse(Rasteriser r, ClientUnit left, ClientUnit top, ClientUnit right, ClientUnit bottom) const noexcept;
 
-	constexpr void draw(HDC hdc) const noexcept;
+	constexpr void draw(Rasteriser r) const noexcept;
 
 	[[nodiscard]] static constexpr ClientUnitVector clampVector(const ClientUnitVector& v, const BoundingBox& bb) noexcept;
 
@@ -144,7 +144,6 @@ private:
 private:
 	Space space_;
 	Axes axes_;
-	Rasteriser rasteriser_;
 };
 
 

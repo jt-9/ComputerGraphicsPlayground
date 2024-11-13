@@ -16,34 +16,34 @@
 
 class RibbonApplicationHolder final {
 public:
-	// Methods to facilitate the initialization and destruction of the Ribbon framework.
-	bool Create(HWND hWnd);
-	void Destroy();
+    // Methods to facilitate the initialization and destruction of the Ribbon framework.
+    bool Create(HWND hWnd);
+    void Destroy();
 
-	RibbonApplicationHolder() noexcept;
-	~RibbonApplicationHolder() noexcept;
+    RibbonApplicationHolder() noexcept;
+    ~RibbonApplicationHolder() noexcept;
 
-	RibbonApplicationHolder(RibbonApplicationHolder&&) noexcept;
-	RibbonApplicationHolder& operator = (RibbonApplicationHolder&&) noexcept;
+    RibbonApplicationHolder(RibbonApplicationHolder&&) noexcept;
+    RibbonApplicationHolder& operator = (RibbonApplicationHolder&&) noexcept;
 
-	RibbonApplicationHolder(RibbonApplicationHolder const&) = delete;
-	RibbonApplicationHolder& operator = (RibbonApplicationHolder const&) = delete;
+    RibbonApplicationHolder(RibbonApplicationHolder const&) = delete;
+    RibbonApplicationHolder& operator = (RibbonApplicationHolder const&) = delete;
 
-	inline Application* getApplication() const {
-		return application;
-	}
-
-private:
-	void DestroyFramework();
-	void DestroyApplication();
+    inline Application* getApplication() const {
+        return application;
+    }
 
 private:
-	IUIFramework* iuiFramework;  // Reference to the Ribbon framework.
-	Application* application;  // Reference to the Application object.
+    void DestroyFramework();
+    void DestroyApplication();
+
+private:
+    IUIFramework* iuiFramework;  // Reference to the Ribbon framework.
+    Application* application;  // Reference to the Application object.
 };
 
 extern RibbonApplicationHolder holder;
 
 inline auto getApplication() noexcept {
-	return holder.getApplication();
+    return holder.getApplication();
 }
