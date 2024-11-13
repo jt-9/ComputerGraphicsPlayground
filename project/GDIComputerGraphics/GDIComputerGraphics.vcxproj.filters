@@ -1,0 +1,244 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Manifest Include="GDIComputerGraphics.manifest" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="small.ico">
+      <Filter>resources</Filter>
+    </Image>
+    <Image Include="res\AddTableL.bmp">
+      <Filter>resources</Filter>
+    </Image>
+    <Image Include="res\AddTableS.bmp">
+      <Filter>resources</Filter>
+    </Image>
+    <Image Include="res\Button_Image.bmp">
+      <Filter>resources</Filter>
+    </Image>
+    <Image Include="res\Copy.bmp">
+      <Filter>resources</Filter>
+    </Image>
+    <Image Include="res\DeleteTableL.bmp">
+      <Filter>resources</Filter>
+    </Image>
+    <Image Include="res\DeleteTableS.bmp">
+      <Filter>resources</Filter>
+    </Image>
+    <Image Include="res\ExitL.bmp">
+      <Filter>resources</Filter>
+    </Image>
+    <Image Include="GDIComputerGraphics.ico">
+      <Filter>resources</Filter>
+    </Image>
+    <Image Include="res\PrintRelationshipsL.bmp">
+      <Filter>resources</Filter>
+    </Image>
+    <Image Include="res\PrintRelationshipsS.bmp">
+      <Filter>resources</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="app">
+      <UniqueIdentifier>{246f5c32-496b-445e-b61f-3f01daccaf64}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="command">
+      <UniqueIdentifier>{39f4bf3e-6eac-41ba-8d6a-19662ab6b1bb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ribbon">
+      <UniqueIdentifier>{fed741b0-1ed6-4512-bf90-e9dc27e25c92}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="resources">
+      <UniqueIdentifier>{2421fd7f-6cb2-49d6-8616-df6c15451f40}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MemoryDC">
+      <UniqueIdentifier>{224d1771-d223-4d6b-984a-3458ce4fdf26}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="myCG">
+      <UniqueIdentifier>{9b8027f7-2267-409a-9c9a-4988b2468acb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="CoordSpace">
+      <UniqueIdentifier>{7088d872-611f-483b-a9a6-3e13462b74f1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ApeMath">
+      <UniqueIdentifier>{9b2f99d3-0434-4a9a-8cdf-d1750c37e50a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="common">
+      <UniqueIdentifier>{29e76c2b-8885-4e99-b444-b4b836867a95}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="myCG\io">
+      <UniqueIdentifier>{6534ac60-22a5-41fd-a08f-763adfa10f98}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="myCG\model">
+      <UniqueIdentifier>{4b9bf5c8-f6f0-4360-a7cc-a41aca557eb5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="app\dialogs">
+      <UniqueIdentifier>{783a2a61-a9fa-4739-a825-2b18aa983a7f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="raii">
+      <UniqueIdentifier>{604b1368-161c-4f45-aa2a-2ba70a067a5c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="raii\deleter">
+      <UniqueIdentifier>{891c9a64-fef1-4326-8be0-d3ae828b3d8d}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\src\myCG\MyCG.h">
+      <Filter>myCG</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\myCG\MyCGDefines.h">
+      <Filter>myCG</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\myCG\MyCG-inl.h">
+      <Filter>myCG</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\myCG\MyCGRasterisationPolicy.h">
+      <Filter>myCG</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\common\CoordSpaceCommon.h">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\CoordSpace\CoordSpace2D.h">
+      <Filter>CoordSpace</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\CoordSpace\CoordSpace2D-inl.h">
+      <Filter>CoordSpace</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\CoordSpace\CoordSpaceDefs.h">
+      <Filter>CoordSpace</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\myCG\model\CGModel.h">
+      <Filter>myCG\model</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\myCG\io\ModelReader.h">
+      <Filter>myCG\io</Filter>
+    </ClInclude>
+    <ClInclude Include="src\resource.h" />
+    <ClInclude Include="..\..\src\ApeMath\ApeMath.h">
+      <Filter>ApeMath</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\ApeMath\ApeMath-inl.h">
+      <Filter>ApeMath</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\ApeMath\Matrix.h">
+      <Filter>ApeMath</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\ApeMath\Matrix-inl.h">
+      <Filter>ApeMath</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\ApeMath\Vector.h">
+      <Filter>ApeMath</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\ApeMath\Vector-inl.h">
+      <Filter>ApeMath</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\ApeMath\BoundingBox.h">
+      <Filter>ApeMath</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\ApeMath\BoundingBox-inl.h">
+      <Filter>ApeMath</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\CoordSpace\CoordAxis2D.h">
+      <Filter>CoordSpace</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\CoordSpace\CoordAxis2D-inl.h">
+      <Filter>CoordSpace</Filter>
+    </ClInclude>
+    <ClInclude Include="src\command\CommandHandler.h">
+      <Filter>command</Filter>
+    </ClInclude>
+    <ClInclude Include="src\command\CommandIds.h">
+      <Filter>command</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ribbon\RibbonFramework.h">
+      <Filter>ribbon</Filter>
+    </ClInclude>
+    <ClInclude Include="src\app\Application.h">
+      <Filter>app</Filter>
+    </ClInclude>
+    <ClInclude Include="src\app\View.h">
+      <Filter>app</Filter>
+    </ClInclude>
+    <ClInclude Include="src\app\FileDialogEventHandler.h">
+      <Filter>app\dialogs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\ApeMath\MTLConcepts.h">
+      <Filter>ApeMath</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\ApeMath\MTLValsCore.h">
+      <Filter>ApeMath</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\ApeMath\Matrix-std.h">
+      <Filter>ApeMath</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\CoordSpace\CartesianCoordSys2D.h">
+      <Filter>CoordSpace</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\CoordSpace\WinRasterisationPolicies.h">
+      <Filter>CoordSpace</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\CoordSpace\Rasteriser.h">
+      <Filter>CoordSpace</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\raii\unique_ptr.hpp">
+      <Filter>raii</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\raii\unique_rc.hpp">
+      <Filter>raii</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\raii\deleter\memory_delete.hpp">
+      <Filter>raii\deleter</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\raii\deleter\stdio_fclose.hpp">
+      <Filter>raii\deleter</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\raii\deleter\windows_close_handle.hpp">
+      <Filter>raii\deleter</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\raii\deleter\windows_com_file_dlg_unadvise.hpp">
+      <Filter>raii\deleter</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\raii\deleter\windows_com_release.hpp">
+      <Filter>raii\deleter</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\raii\deleter\windows_dc_deleter.hpp">
+      <Filter>raii\deleter</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\raii\deleter\windows_gdi_deleter.hpp">
+      <Filter>raii\deleter</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\raii\raii_defs.hpp">
+      <Filter>raii</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\MemoryDC\MemoryDC.hpp">
+      <Filter>MemoryDC</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\src\myCG\io\ModelReader-inl.h">
+      <Filter>myCG\io</Filter>
+    </ClCompile>
+    <ClCompile Include="src\WinMain.cpp" />
+    <ClCompile Include="src\command\CommandHandler.cpp">
+      <Filter>command</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ribbon\RibbonFramework.cpp">
+      <Filter>ribbon</Filter>
+    </ClCompile>
+    <ClCompile Include="src\app\Application.cpp">
+      <Filter>app</Filter>
+    </ClCompile>
+    <ClCompile Include="src\app\View.cpp">
+      <Filter>app</Filter>
+    </ClCompile>
+    <ClCompile Include="src\app\FileDialogEventHandler.cpp">
+      <Filter>app\dialogs</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="RibbonLayout.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="GDIComputerGraphics.rc" />
+  </ItemGroup>
+</Project>

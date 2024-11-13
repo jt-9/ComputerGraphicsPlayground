@@ -1,0 +1,238 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="app">
+      <UniqueIdentifier>{14a16c1f-bf59-41d0-8517-c12fec006e52}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="pch">
+      <UniqueIdentifier>{f50c0ccb-a776-431a-a1ae-78c97e4045eb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="model">
+      <UniqueIdentifier>{3b19e2d1-7ee9-4916-ada7-73bc81ca9727}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="view">
+      <UniqueIdentifier>{0895a5c2-b352-49e0-9569-010bfc0cdfc9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="window">
+      <UniqueIdentifier>{347966cf-0a65-45cb-8b17-d00006bb4fbb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ApeMath">
+      <UniqueIdentifier>{9c7aaa0d-226d-4ff1-afe8-9db6513a53ae}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="CoordSpace">
+      <UniqueIdentifier>{02868459-19b9-4daa-a69c-d3c2a8586c72}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="raii">
+      <UniqueIdentifier>{52b72c7b-87c7-40e7-b599-b905937c6a56}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="raii\deleter">
+      <UniqueIdentifier>{bea4ba77-1fc2-4399-b6c2-cafa64149ad3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="gdi">
+      <UniqueIdentifier>{22bf0d2b-2a6a-480d-a75c-95d7a1959df8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="gdi\MemoryDC">
+      <UniqueIdentifier>{fb86b9b6-2812-4bad-9c6d-0c208cc0fe54}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="CoordSysGraph.rc">
+      <Filter>Resource Files</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="res\output_wnd.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\output_wnd_hc.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\buttons.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\filelarge.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\filesmall.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\main.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\writelarge.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\writesmall.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\CoordSysGraphDoc.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\CoordSysGraph.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\Toolbar.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\Toolbar256.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="res\ribbon.mfcribbon-ms">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\CoordSysGraph.rc2">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="SourceInclude.props" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\app\CoordSysGraph.cpp">
+      <Filter>app</Filter>
+    </ClCompile>
+    <ClCompile Include="src\pch.cpp">
+      <Filter>pch</Filter>
+    </ClCompile>
+    <ClCompile Include="src\model\CoordSysGraphDoc.cpp">
+      <Filter>model</Filter>
+    </ClCompile>
+    <ClCompile Include="src\view\CoordSysGraphView.cpp">
+      <Filter>view</Filter>
+    </ClCompile>
+    <ClCompile Include="src\window\MainFrm.cpp">
+      <Filter>window</Filter>
+    </ClCompile>
+    <ClCompile Include="src\window\OutputWnd.cpp">
+      <Filter>window</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\app\CoordSysGraph.h">
+      <Filter>app</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource.h" />
+    <ClInclude Include="targetver.h" />
+    <ClInclude Include="src\pch.h">
+      <Filter>pch</Filter>
+    </ClInclude>
+    <ClInclude Include="src\model\CoordSysGraphDoc.h">
+      <Filter>model</Filter>
+    </ClInclude>
+    <ClInclude Include="src\view\CoordSysGraphView.h">
+      <Filter>view</Filter>
+    </ClInclude>
+    <ClInclude Include="src\window\MainFrm.h">
+      <Filter>window</Filter>
+    </ClInclude>
+    <ClInclude Include="src\window\OutputWnd.h">
+      <Filter>window</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\ApeMath\ApeMath.h">
+      <Filter>ApeMath</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\ApeMath\ApeMath-inl.h">
+      <Filter>ApeMath</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\ApeMath\MTLValsCore.h">
+      <Filter>ApeMath</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\ApeMath\Matrix.h">
+      <Filter>ApeMath</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\ApeMath\Matrix-inl.h">
+      <Filter>ApeMath</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\ApeMath\Rect.h">
+      <Filter>ApeMath</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\ApeMath\Rect-inl.h">
+      <Filter>ApeMath</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\ApeMath\Vector.h">
+      <Filter>ApeMath</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\ApeMath\Vector-inl.h">
+      <Filter>ApeMath</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\CoordSpace\CoordAxis2D.h">
+      <Filter>CoordSpace</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\CoordSpace\CoordAxis2D-inl.h">
+      <Filter>CoordSpace</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\CoordSpace\CoordSpace2D.h">
+      <Filter>CoordSpace</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\CoordSpace\CoordSpace2D-inl.h">
+      <Filter>CoordSpace</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\CoordSpace\CoordSpaceDefs.h">
+      <Filter>CoordSpace</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\ApeMath\MTLConcepts.h">
+      <Filter>ApeMath</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\ApeMath\Matrix-std.h">
+      <Filter>ApeMath</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\CoordSpace\CartesianCoordSys2D.h">
+      <Filter>CoordSpace</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\CoordSpace\CartesianCoordSys2D-inl.h">
+      <Filter>CoordSpace</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\MemoryDC\MemoryDC.hpp">
+      <Filter>gdi\MemoryDC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\raii\raii_defs.hpp">
+      <Filter>raii</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\raii\unique_ptr.hpp">
+      <Filter>raii</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\raii\unique_rc.hpp">
+      <Filter>raii</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\raii\deleter\memory_delete.hpp">
+      <Filter>raii\deleter</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\raii\deleter\stdio_fclose.hpp">
+      <Filter>raii\deleter</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\raii\deleter\windows_close_handle.hpp">
+      <Filter>raii\deleter</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\raii\deleter\windows_com_file_dlg_unadvise.hpp">
+      <Filter>raii\deleter</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\raii\deleter\windows_com_release.hpp">
+      <Filter>raii\deleter</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\raii\deleter\windows_dc_deleter.hpp">
+      <Filter>raii\deleter</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\raii\deleter\windows_dc_restore.hpp">
+      <Filter>raii\deleter</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\raii\deleter\windows_gdi_deleter.hpp">
+      <Filter>raii\deleter</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\raii\deleter\windows_gdi_select_object.hpp">
+      <Filter>raii\deleter</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\CoordSpace\Rasteriser.h">
+      <Filter>CoordSpace</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\CoordSpace\WinRasterisationPolicies.h">
+      <Filter>CoordSpace</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\CoordSpace\LabelFormatter.hpp">
+      <Filter>CoordSpace</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

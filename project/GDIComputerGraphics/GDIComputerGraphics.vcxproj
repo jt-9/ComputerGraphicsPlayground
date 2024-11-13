@@ -1,0 +1,316 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>17.0</VCProjectVersion>
+    <ProjectGuid>{4CC1ED2B-4D76-4F55-B736-972041F27680}</ProjectGuid>
+    <RootNamespace>GDIComputerGraphics</RootNamespace>
+    <Keyword>Win32Proj</Keyword>
+    <ProjectName>GDIComputerGraphics</ProjectName>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <PlatformToolset>v143</PlatformToolset>
+    <UseOfAtl>Static</UseOfAtl>
+    <CharacterSet>Unicode</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <PlatformToolset>v143</PlatformToolset>
+    <UseOfAtl>false</UseOfAtl>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <PlatformToolset>v143</PlatformToolset>
+    <UseOfAtl>Static</UseOfAtl>
+    <CharacterSet>Unicode</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <PlatformToolset>v143</PlatformToolset>
+    <UseOfAtl>false</UseOfAtl>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="SourceInclude.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="SourceInclude.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="SourceInclude.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="SourceInclude.props" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>17.0.32203.90</_ProjectFileVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <OutDir>$(SolutionDir)$(Configuration)\</OutDir>
+    <IntDir>$(Configuration)\</IntDir>
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <OutDir>$(SolutionDir)$(Configuration)\</OutDir>
+    <IntDir>$(Configuration)\</IntDir>
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>$(Platform)\$(Configuration)\</IntDir>
+    <LinkIncremental>true</LinkIncremental>
+    <SourcePath>$(VC_IncludePath);</SourcePath>
+    <IncludePath>$(IncludePath);$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>$(Platform)\$(Configuration)\</IntDir>
+    <LinkIncremental>false</LinkIncremental>
+    <IncludePath>.\src;$(Project_SourceDirectories);$(IncludePath)</IncludePath>
+    <SourcePath>.\src;$(Project_SourceDirectories);$(SourcePath)</SourcePath>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <PreBuildEvent>
+      <Command />
+    </PreBuildEvent>
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>true</MinimalRebuild>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <PrecompiledHeader />
+      <WarningLevel>Level4</WarningLevel>
+      <TreatWarningAsError>true</TreatWarningAsError>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+    </ClCompile>
+    <ResourceCompile>
+      <AdditionalIncludeDirectories>$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Link>
+      <AdditionalDependencies>uuid.lib;propsys.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Windows</SubSystem>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <DataExecutionPrevention />
+      <TargetMachine>MachineX86</TargetMachine>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <Optimization>MaxSpeed</Optimization>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <AdditionalIncludeDirectories>$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <PrecompiledHeader />
+      <WarningLevel>Level4</WarningLevel>
+      <TreatWarningAsError>true</TreatWarningAsError>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+    </ClCompile>
+    <ResourceCompile>
+      <AdditionalIncludeDirectories>$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Windows</SubSystem>
+      <OptimizeReferences>true</OptimizeReferences>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <DataExecutionPrevention />
+      <TargetMachine>MachineX86</TargetMachine>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <PreBuildEvent>
+      <Command />
+    </PreBuildEvent>
+    <Midl>
+      <TargetEnvironment>X64</TargetEnvironment>
+    </Midl>
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>$(Project_SourceDirectories);$(IntDir)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <PrecompiledHeader />
+      <WarningLevel>Level4</WarningLevel>
+      <TreatWarningAsError>true</TreatWarningAsError>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+      <LanguageStandard_C>stdc17</LanguageStandard_C>
+    </ClCompile>
+    <ResourceCompile>
+      <AdditionalIncludeDirectories>$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Link>
+      <AdditionalDependencies>uuid.lib;shlwapi.lib;propsys.lib;onecore.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Windows</SubSystem>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <DataExecutionPrevention />
+      <TargetMachine>MachineX64</TargetMachine>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Midl>
+      <TargetEnvironment>X64</TargetEnvironment>
+    </Midl>
+    <ClCompile>
+      <Optimization>MaxSpeed</Optimization>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <AdditionalIncludeDirectories>$(Project_SourceDirectories);$(IntDir)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <PrecompiledHeader />
+      <WarningLevel>Level4</WarningLevel>
+      <TreatWarningAsError>true</TreatWarningAsError>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+      <LanguageStandard_C>stdc17</LanguageStandard_C>
+    </ClCompile>
+    <ResourceCompile>
+      <AdditionalIncludeDirectories>$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Windows</SubSystem>
+      <OptimizeReferences>true</OptimizeReferences>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <DataExecutionPrevention />
+      <TargetMachine>MachineX64</TargetMachine>
+      <AdditionalDependencies>uuid.lib;shlwapi.lib;propsys.lib;onecore.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\src\myCG\io\ModelReader-inl.h" />
+    <ClCompile Include="src\app\Application.cpp" />
+    <ClCompile Include="src\app\FileDialogEventHandler.cpp" />
+    <ClCompile Include="src\app\View.cpp" />
+    <ClCompile Include="src\command\CommandHandler.cpp" />
+    <ClCompile Include="src\ribbon\RibbonFramework.cpp" />
+    <ClCompile Include="src\WinMain.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\src\ApeMath\ApeMath-inl.h" />
+    <ClInclude Include="..\..\src\ApeMath\ApeMath.h" />
+    <ClInclude Include="..\..\src\ApeMath\BoundingBox-inl.h" />
+    <ClInclude Include="..\..\src\ApeMath\BoundingBox.h" />
+    <ClInclude Include="..\..\src\ApeMath\Matrix-inl.h" />
+    <ClInclude Include="..\..\src\ApeMath\Matrix-std.h" />
+    <ClInclude Include="..\..\src\ApeMath\Matrix.h" />
+    <ClInclude Include="..\..\src\ApeMath\MTLConcepts.h" />
+    <ClInclude Include="..\..\src\ApeMath\MTLValsCore.h" />
+    <ClInclude Include="..\..\src\ApeMath\Vector-inl.h" />
+    <ClInclude Include="..\..\src\ApeMath\Vector.h" />
+    <ClInclude Include="..\..\src\common\CoordSpaceCommon.h" />
+    <ClInclude Include="..\..\src\CoordSpace\CartesianCoordSys2D.h" />
+    <ClInclude Include="..\..\src\CoordSpace\CoordAxis2D-inl.h" />
+    <ClInclude Include="..\..\src\CoordSpace\CoordAxis2D.h" />
+    <ClInclude Include="..\..\src\CoordSpace\CoordSpace2D-inl.h" />
+    <ClInclude Include="..\..\src\CoordSpace\CoordSpace2D.h" />
+    <ClInclude Include="..\..\src\CoordSpace\CoordSpaceDefs.h" />
+    <ClInclude Include="..\..\src\CoordSpace\Rasteriser.h" />
+    <ClInclude Include="..\..\src\CoordSpace\WinRasterisationPolicies.h" />
+    <ClInclude Include="..\..\src\MemoryDC\MemoryDC.hpp" />
+    <ClInclude Include="..\..\src\myCG\io\ModelReader.h" />
+    <ClInclude Include="..\..\src\myCG\model\CGModel.h" />
+    <ClInclude Include="..\..\src\myCG\MyCG-inl.h" />
+    <ClInclude Include="..\..\src\myCG\MyCG.h" />
+    <ClInclude Include="..\..\src\myCG\MyCGDefines.h" />
+    <ClInclude Include="..\..\src\myCG\MyCGRasterisationPolicy.h" />
+    <ClInclude Include="..\..\src\raii\deleter\memory_delete.hpp" />
+    <ClInclude Include="..\..\src\raii\deleter\stdio_fclose.hpp" />
+    <ClInclude Include="..\..\src\raii\deleter\windows_close_handle.hpp" />
+    <ClInclude Include="..\..\src\raii\deleter\windows_com_file_dlg_unadvise.hpp" />
+    <ClInclude Include="..\..\src\raii\deleter\windows_com_release.hpp" />
+    <ClInclude Include="..\..\src\raii\deleter\windows_dc_deleter.hpp" />
+    <ClInclude Include="..\..\src\raii\deleter\windows_gdi_deleter.hpp" />
+    <ClInclude Include="..\..\src\raii\raii_defs.hpp" />
+    <ClInclude Include="..\..\src\raii\unique_ptr.hpp" />
+    <ClInclude Include="..\..\src\raii\unique_rc.hpp" />
+    <ClInclude Include="src\app\Application.h" />
+    <ClInclude Include="src\app\FileDialogEventHandler.h" />
+    <ClInclude Include="src\app\View.h" />
+    <ClInclude Include="src\command\CommandHandler.h" />
+    <ClInclude Include="src\command\CommandIds.h" />
+    <ClInclude Include="src\resource.h" />
+    <ClInclude Include="src\ribbon\RibbonFramework.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="res\AddTableL.bmp" />
+    <Image Include="res\AddTableS.bmp" />
+    <Image Include="res\Button_Image.bmp" />
+    <Image Include="res\Copy.bmp" />
+    <Image Include="res\DeleteTableL.bmp" />
+    <Image Include="res\DeleteTableS.bmp" />
+    <Image Include="res\ExitL.bmp" />
+    <Image Include="res\PrintRelationshipsL.bmp" />
+    <Image Include="res\PrintRelationshipsS.bmp" />
+    <Image Include="GDIComputerGraphics.ico" />
+    <Image Include="small.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="GDIComputerGraphics.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Manifest Include="GDIComputerGraphics.manifest" />
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="RibbonLayout.xml">
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Building RibbonLayout.xml</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">uicc.exe RibbonLayout.xml $(IntDir)RibbonLayout.bml /header:$(IntDir)RibbonLayout.h /res:$(IntDir)RibbonLayout.rc /name:RibbonLayout
+</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">RibbonLayout.bml;RibbonLayout.rc;RibbonLayout.h;%(Outputs)</Outputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Building RibbonLayout.xml</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">uicc.exe RibbonLayout.xml $(IntDir)RibbonLayout.bml /header:$(IntDir)RibbonLayout.h /res:$(IntDir)RibbonLayout.rc /name:RibbonLayout
+</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">RibbonLayout.bml;RibbonLayout.rc;RibbonLayout.h;%(Outputs)</Outputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Building RibbonLayout.xml</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">uicc.exe RibbonLayout.xml $(IntDir)RibbonLayout.bml /header:$(IntDir)RibbonLayout.h /res:$(IntDir)RibbonLayout.rc /name:RibbonLayout</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">SimpleRibbon.bml;SimpleRibbonUI.rc;SimpleRibbonUI.h;%(Outputs)</Outputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Building RibbonLayout.xml</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">uicc.exe RibbonLayout.xml $(IntDir)RibbonLayout.bml /header:$(IntDir)RibbonLayout.h /res:$(IntDir)RibbonLayout.rc /name:RibbonLayout</Command>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">RibbonLayout.bml;RibbonLayout.rc;RibbonLayout.h;%(Outputs)</Outputs>
+    </CustomBuild>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
