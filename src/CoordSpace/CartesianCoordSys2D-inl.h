@@ -9,7 +9,7 @@ MY_COORD_SPACE_BEGIN
 
 
 template<typename SU, typename CU, typename TU, typename Formatter>
-MYMTL_INLINE constexpr CartesianCoordSys2D<SU, CU, TU, Formatter>::CartesianCoordSys2D(const Space::ClientSpace& clientSpace, const Space::ScreenSpace& screenSpace, const ClientUnitVector& origin, 
+MYMTL_INLINE constexpr CartesianCoordSys2D<SU, CU, TU, Formatter>::CartesianCoordSys2D(const Space::ClientSpace& clientSpace, const Space::ScreenSpace& screenSpace, const ClientVector& origin, 
     const std::optional<std::array<std::optional<AxisAttributes>, Space::kDimensions>>& aa,
     const std::optional<std::array<std::optional<TickAttributes>, Space::kDimensions>>& ta,
     const std::optional<std::array<std::optional<LabelAttributes>, Space::kDimensions>>& la) noexcept
@@ -19,7 +19,7 @@ MYMTL_INLINE constexpr CartesianCoordSys2D<SU, CU, TU, Formatter>::CartesianCoor
 }
 
 template<typename SU, typename CU, typename TU, typename Formatter>
-MYMTL_INLINE constexpr CartesianCoordSys2D<SU, CU, TU, Formatter>::CartesianCoordSys2D(const Space::ClientSpace& clientSpace, const Space::TransformationMatrix& m, const ClientUnitVector& origin,
+MYMTL_INLINE constexpr CartesianCoordSys2D<SU, CU, TU, Formatter>::CartesianCoordSys2D(const Space::ClientSpace& clientSpace, const Space::TransformationMatrix& m, const ClientVector& origin,
     const std::optional<std::array<std::optional<AxisAttributes>, Space::kDimensions>>& aa,
     const std::optional<std::array<std::optional<TickAttributes>, Space::kDimensions>>& ta,
     const std::optional<std::array<std::optional<LabelAttributes>, Space::kDimensions>>& la) noexcept
@@ -30,7 +30,7 @@ MYMTL_INLINE constexpr CartesianCoordSys2D<SU, CU, TU, Formatter>::CartesianCoor
 
 template<typename SU, typename CU, typename TU, typename Formatter>
 MYMTL_INLINE constexpr CartesianCoordSys2D<SU, CU, TU, Formatter>::CartesianCoordSys2D(const Space::ClientSpace& clientSpace, const Space::ScreenSpace& screenSpace,
-    const BoundingBox& boundBox, const ClientUnitVector& origin,
+    const BoundingBox& boundBox, const ClientVector& origin,
     const std::optional<std::array<std::optional<AxisAttributes>, Space::kDimensions>>& aa,
     const std::optional<std::array<std::optional<TickAttributes>, Space::kDimensions>>& ta,
     const std::optional<std::array<std::optional<LabelAttributes>, Space::kDimensions>>& la) noexcept
@@ -50,7 +50,7 @@ MYMTL_INLINE constexpr CartesianCoordSys2D<SU, CU, TU, Formatter>::CartesianCoor
 
 template<typename SU, typename CU, typename TU, typename Formatter>
 MYMTL_INLINE constexpr CartesianCoordSys2D<SU, CU, TU, Formatter>::CartesianCoordSys2D(const Space::ClientSpace& clientSpace, const Space::TransformationMatrix& m,
-    const BoundingBox& boundBox, const ClientUnitVector& origin,
+    const BoundingBox& boundBox, const ClientVector& origin,
     const std::optional<std::array<std::optional<AxisAttributes>, Space::kDimensions>>& aa,
     const std::optional<std::array<std::optional<TickAttributes>, Space::kDimensions>>& ta,
     const std::optional<std::array<std::optional<LabelAttributes>, Space::kDimensions>>& la) noexcept
@@ -93,7 +93,7 @@ MYMTL_INLINE constexpr const typename CartesianCoordSys2D<SU, CU, TU, Formatter>
 }
 
 template<typename SU, typename CU, typename TU, typename Formatter>
-MYMTL_INLINE constexpr auto& CartesianCoordSys2D<SU, CU, TU, Formatter>::setOrigin(const ClientUnitVector& origin) noexcept {
+MYMTL_INLINE constexpr auto& CartesianCoordSys2D<SU, CU, TU, Formatter>::setOrigin(const ClientVector& origin) noexcept {
     for (std::size_t i = 0; i < axes_.size(); i++) {
         axes_[i].origin_ = origin[i];
     }
@@ -102,8 +102,8 @@ MYMTL_INLINE constexpr auto& CartesianCoordSys2D<SU, CU, TU, Formatter>::setOrig
 }
 
 template<typename SU, typename CU, typename TU, typename Formatter>
-MY_COORD_SPACE_ATTR_NO_DISCARD constexpr typename CartesianCoordSys2D<SU, CU, TU, Formatter>::ClientUnitVector CartesianCoordSys2D<SU, CU, TU, Formatter>::getOrigin() noexcept {
-    ClientUnitVector origin;
+MYMTL_INLINE constexpr typename CartesianCoordSys2D<SU, CU, TU, Formatter>::ClientVector CartesianCoordSys2D<SU, CU, TU, Formatter>::getOrigin() noexcept {
+    ClientVector origin;
 
     for (std::size_t i = 0; i < axes_.size(); i++) {
         origin[i] = axes_[i].origin_;
@@ -113,18 +113,25 @@ MY_COORD_SPACE_ATTR_NO_DISCARD constexpr typename CartesianCoordSys2D<SU, CU, TU
 }
 
 template<typename SU, typename CU, typename TU, typename Formatter>
+MYMTL_INLINE constexpr auto& CartesianCoordSys2D<SU, CU, TU, Formatter>::setAxisPoint(const ClientVector& endPoint, typename Axis::Name axisName, std::uint8_t axisPointIndex) noexcept {
+    axes_[mapAxisNameToIndex(axisName)].setEndPoint(endPoint, axisPointIndex);
+
+    return *this;
+}
+
+template<typename SU, typename CU, typename TU, typename Formatter>
 MYMTL_INLINE constexpr void CartesianCoordSys2D<SU, CU, TU, Formatter>::recalculateTransformation() noexcept {
     space_.recalculateTransformation();
 }
 
 template<typename SU, typename CU, typename TU, typename Formatter>
-[[nodiscard]] MYMTL_INLINE constexpr typename CartesianCoordSys2D<SU, CU, TU, Formatter>::ClientUnitVector CartesianCoordSys2D<SU, CU, TU, Formatter>::clampVector(
-    const typename CartesianCoordSys2D<SU, CU, TU, Formatter>::ClientUnitVector& v,
+[[nodiscard]] MYMTL_INLINE constexpr typename CartesianCoordSys2D<SU, CU, TU, Formatter>::ClientVector CartesianCoordSys2D<SU, CU, TU, Formatter>::clampVector(
+    const typename CartesianCoordSys2D<SU, CU, TU, Formatter>::ClientVector& v,
     const typename CartesianCoordSys2D<SU, CU, TU, Formatter>::BoundingBox& bb) noexcept {
 
     assert(!bb.is_empty() && "Bounding box cannot be 0-dimensional");
 
-    CartesianCoordSys2D<SU, CU, TU, Formatter>::ClientUnitVector r;
+    CartesianCoordSys2D<SU, CU, TU, Formatter>::ClientVector r;
     for (unsigned char i = 0; i < bb.size(); i++) {
         r[i] = std::clamp(v[i], bb.min[i], bb.max[i]);
     }

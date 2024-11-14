@@ -68,8 +68,8 @@ CCoordSysGraphView::CCoordSysGraphView() noexcept
             std::optional{ typename CoordSys2D::TickAttributes{0.1F, 5, 5, tickPen_.get(), tickBrush_.get()} }
         }},
         std::optional{std::array{
-            std::optional{ typename CoordSys2D::LabelAttributes{0.5F, coordsys::LabelFormatter<CoordSys2D::ClientUnit>{coordLabelFormat}, CoordSys2D::ScreenUnitVector{0, 12}, (TA_TOP | TA_NOUPDATECP | TA_CENTER), nullptr, 0, 0} },
-            std::optional{ typename CoordSys2D::LabelAttributes{1, coordsys::LabelFormatter<CoordSys2D::ClientUnit>{coordLabelFormat}, CoordSys2D::ScreenUnitVector{8, -15}, (TA_TOP | TA_NOUPDATECP | TA_CENTER), nullptr, 0, 1} }
+            std::optional{ typename CoordSys2D::LabelAttributes{0.5F, coordsys::LabelFormatter<CoordSys2D::ClientUnit>{coordLabelFormat}, CoordSys2D::ScreenVector{0, 12}, (TA_TOP | TA_NOUPDATECP | TA_CENTER), nullptr, 0, 0} },
+            std::optional{ typename CoordSys2D::LabelAttributes{1, coordsys::LabelFormatter<CoordSys2D::ClientUnit>{coordLabelFormat}, CoordSys2D::ScreenVector{8, -15}, (TA_TOP | TA_NOUPDATECP | TA_CENTER), nullptr, 0, 1} }
         }}
     }
 {

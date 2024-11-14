@@ -21,8 +21,8 @@ public:
 
     using Axis = Axis2D<ScreenUnit, ClientUnit, Formatter>;
     using Axes = std::array<Axis, Space::kDimensions>;
-    using ClientUnitVector = mymtl::VectorN<ClientUnit, Space::kDimensions>;
-    using ScreenUnitVector = mymtl::VectorN<ScreenUnit, Space::kDimensions>;
+    using ClientVector = mymtl::VectorN<ClientUnit, Space::kDimensions>;
+    using ScreenVector = mymtl::VectorN<ScreenUnit, Space::kDimensions>;
 
     using AxisAttributes = typename Axis::AxisAttributes;
     using TickAttributes = typename Axis::TickAttributes;
@@ -30,8 +30,8 @@ public:
     using LabelAttributes = typename Axis::LabelAttributes;
 
     struct BoundingBox {
-        ClientUnitVector min;
-        ClientUnitVector max;
+        ClientVector min;
+        ClientVector max;
 
         constexpr auto size() const noexcept {
             return min.size();
@@ -43,22 +43,22 @@ public:
     };
 
 public:
-    constexpr CartesianCoordSys2D(const Space::ClientSpace& clientSpace, const Space::ScreenSpace& screenSpace, const ClientUnitVector& origin = { 0 },
+    constexpr CartesianCoordSys2D(const Space::ClientSpace& clientSpace, const Space::ScreenSpace& screenSpace, const ClientVector& origin = { 0 },
         const std::optional<std::array<std::optional<AxisAttributes>, Space::kDimensions>>& aa = std::nullopt, 
         const std::optional<std::array<std::optional<TickAttributes>, Space::kDimensions>>& ta = std::nullopt,
         const std::optional<std::array<std::optional<LabelAttributes>, Space::kDimensions>>& la = std::nullopt) noexcept;
 
-    constexpr CartesianCoordSys2D(const Space::ClientSpace& clientSpace, const Space::TransformationMatrix& m, const ClientUnitVector& origin = { 0 },
+    constexpr CartesianCoordSys2D(const Space::ClientSpace& clientSpace, const Space::TransformationMatrix& m, const ClientVector& origin = { 0 },
         const std::optional<std::array<std::optional<AxisAttributes>, Space::kDimensions>>& aa = std::nullopt,
         const std::optional<std::array<std::optional<TickAttributes>, Space::kDimensions>>& ta = std::nullopt,
         const std::optional<std::array<std::optional<LabelAttributes>, Space::kDimensions>>& la = std::nullopt) noexcept;
 
-    constexpr CartesianCoordSys2D(const Space::ClientSpace& clientSpace, const Space::ScreenSpace& screenSpace, const BoundingBox& boundBox, const ClientUnitVector& origin = { 0 },
+    constexpr CartesianCoordSys2D(const Space::ClientSpace& clientSpace, const Space::ScreenSpace& screenSpace, const BoundingBox& boundBox, const ClientVector& origin = { 0 },
         const std::optional<std::array<std::optional<AxisAttributes>, Space::kDimensions>>& aa = std::nullopt,
         const std::optional<std::array<std::optional<TickAttributes>, Space::kDimensions>>& ta = std::nullopt,
         const std::optional<std::array<std::optional<LabelAttributes>, Space::kDimensions>>& la = std::nullopt) noexcept;
 
-    constexpr CartesianCoordSys2D(const Space::ClientSpace& clientSpace, const Space::TransformationMatrix& m, const BoundingBox& boundBox, const ClientUnitVector& origin = { 0 },
+    constexpr CartesianCoordSys2D(const Space::ClientSpace& clientSpace, const Space::TransformationMatrix& m, const BoundingBox& boundBox, const ClientVector& origin = { 0 },
         const std::optional<std::array<std::optional<AxisAttributes>, Space::kDimensions>>& aa = std::nullopt,
         const std::optional<std::array<std::optional<TickAttributes>, Space::kDimensions>>& ta = std::nullopt,
         const std::optional<std::array<std::optional<LabelAttributes>, Space::kDimensions>>& la = std::nullopt) noexcept;
@@ -76,8 +76,10 @@ public:
     constexpr auto& setScreenSpace(const Space::ScreenSpace& screenSpace, bool recalculateTransformation) noexcept;
     MY_COORD_SPACE_ATTR_NO_DISCARD constexpr const Space::ScreenSpace& getScreenSpace() const noexcept;
 
-    constexpr auto& setOrigin(const ClientUnitVector& origin) noexcept;
-    MY_COORD_SPACE_ATTR_NO_DISCARD constexpr ClientUnitVector getOrigin() noexcept;
+    constexpr auto& setOrigin(const ClientVector& origin) noexcept;
+    MY_COORD_SPACE_ATTR_NO_DISCARD constexpr ClientVector getOrigin() noexcept;
+
+    constexpr auto& setAxisPoint(const ClientVector& endPoint, typename Axis::Name axisName, std::uint8_t axisPointIndex) noexcept;
 
     constexpr void recalculateTransformation() noexcept;
 
@@ -89,7 +91,7 @@ public:
 
     constexpr void draw(Rasteriser r) const noexcept;
 
-    [[nodiscard]] static constexpr ClientUnitVector clampVector(const ClientUnitVector& v, const BoundingBox& bb) noexcept;
+    [[nodiscard]] static constexpr ClientVector clampVector(const ClientVector& v, const BoundingBox& bb) noexcept;
 
 private:
     [[nodiscard]] static constexpr BoundingBox fromClientSpace(const typename Space::ClientSpace& clientSpace) noexcept {
@@ -120,17 +122,18 @@ private:
         return std::array{ boundBox.min[axisIndex], boundBox.max[axisIndex] };
     }
 
-    [[nodiscard]] static constexpr ClientUnit computeAxisOrigin(const ClientUnitVector& origin, typename Axis::Name axisName) noexcept {
+    [[nodiscard]] static constexpr ClientUnit computeAxisOrigin(const ClientVector& origin, typename Axis::Name axisName) noexcept {
         const auto axisIndex = mapAxisNameToIndex(axisName);
 
         return origin[axisIndex];
     }
 
-    [[nodiscard]] static constexpr std::array<ClientUnitVector, Axis::kAxisEndsNumber> computeAxisEndPoints(const BoundingBox& boundBox,
-        const ClientUnitVector& origin, typename Axis::Name axisName) noexcept {
+    [[nodiscard]] static constexpr std::array<ClientVector, Axis::kAxisEndsNumber> computeAxisEndPoints(const BoundingBox& boundBox,
+        const ClientVector& origin, typename Axis::Name axisName) noexcept {
 
         const auto axisIndex = mapAxisNameToIndex(axisName);
-        const auto axisStartPointIndex = Axis::kAxisStartIndex, axisEndPointIndex = Axis::kAxisEndIndex;
+        const auto axisStartPointIndex = std::to_underlying(Axis::PointIndex::Start), 
+            axisEndPointIndex = std::to_underlying(Axis::PointIndex::End);
 
         const auto clampedOrigin = clampVector(origin, boundBox);
         std::array endPoints{ clampedOrigin, clampedOrigin };

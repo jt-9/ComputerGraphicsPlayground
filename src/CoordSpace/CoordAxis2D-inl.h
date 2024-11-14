@@ -3,6 +3,7 @@
 
 #pragma once
 
+#include <utility>
 #include "CoordAxis2D.h"
 
 MY_COORD_SPACE_BEGIN
@@ -12,7 +13,7 @@ MY_COORD_SPACE_BEGIN
 // Axis2D class implementation
 //------------------------------------------------------------------------------
 template<typename SU, typename CU, typename Formatter>
-MYMTL_INLINE constexpr Axis2D<SU, CU, Formatter>::Axis2D(const std::array<ClientUnitVector, kAxisEndsNumber>& axisEndPoints,
+MYMTL_INLINE constexpr Axis2D<SU, CU, Formatter>::Axis2D(const std::array<ClientVector, kAxisEndsNumber>& axisEndPoints,
     const std::array<ClientUnit, kAxisEndsNumber>& axisEnds, ClientUnit origin,
     const std::optional<AxisAttributes>& axisAttributes, const std::optional<TickAttributes>& tickAttributes, const std::optional<LabelAttributes>& labelAttributes) noexcept
     : endPoints_{ axisEndPoints }, ends_{ axisEnds }, origin_{ origin }, axisAttr_{ axisAttributes }, labelAttr_{ labelAttributes }, tickAttr_{ tickAttributes }
@@ -172,15 +173,38 @@ MYMTL_INLINE constexpr const auto& Axis2D<SU, CU, Formatter>::getLabelAttrib() c
 }
 
 template<typename SU, typename CU, typename Formatter>
-MYMTL_INLINE constexpr void Axis2D<SU, CU, Formatter>::setStartPoint(const ClientUnitVector& startPoint) noexcept {
-    endPoints_[kAxisStartIndex] = startPoint;
+MYMTL_INLINE constexpr void Axis2D<SU, CU, Formatter>::setEndPoint(const ClientVector& endPoint, PointIndex axisPointIndex) noexcept {
+    assert(std::to_underlying(axisPointIndex) < kAxisEndsNumber && "axisPointIndex is out of bounds");
+    endPoints_[std::to_underlying(axisPointIndex)] = endPoint;
 }
 
 template<typename SU, typename CU, typename Formatter>
-MYMTL_INLINE constexpr void Axis2D<SU, CU, Formatter>::setEndPoint(const ClientUnitVector& endPoint) noexcept {
-    endPoints_[kAxisEndIndex] = endPoint;
+MYMTL_INLINE constexpr const typename Axis2D<SU, CU, Formatter>::ClientVector& Axis2D<SU, CU, Formatter>::getEndPoint(PointIndex axisPointIndex) const noexcept {
+    assert(std::to_underlying(axisPointIndex) < kAxisEndsNumber && "axisPointIndex is out of bounds");
+    return endPoints_[std::to_underlying(axisPointIndex)];
 }
 
+template<typename SU, typename CU, typename Formatter>
+MYMTL_INLINE constexpr const auto& Axis2D<SU, CU, Formatter>::getEndPoints() const noexcept {
+    return endPoints_;
+}
+
+template<typename SU, typename CU, typename Formatter>
+MYMTL_INLINE constexpr void Axis2D<SU, CU, Formatter>::setEndValue(ClientUnit endValue, PointIndex axisPointIndex) noexcept {
+    assert(std::to_underlying(axisPointIndex) < kAxisEndsNumber && "axisPointIndex is out of bounds");
+    ends_[std::to_underlying(axisPointIndex)] = endValue;
+}
+
+template<typename SU, typename CU, typename Formatter>
+MYMTL_INLINE constexpr typename Axis2D<SU, CU, Formatter>::ClientUnit Axis2D<SU, CU, Formatter>::getEndValue(PointIndex axisPointIndex) const noexcept {
+    assert(std::to_underlying(axisPointIndex) < kAxisEndsNumber && "axisPointIndex is out of bounds");
+    return ends_[std::to_underlying(axisPointIndex)];
+}
+
+template<typename SU, typename CU, typename Formatter>
+MYMTL_NO_DISCARD constexpr const auto& Axis2D<SU, CU, Formatter>::getEndValues() const noexcept {
+    return ends_;
+}
 
 //template<typename SU, typename CU, typename Formatter>
 //MYMTL_INLINE int Axis2D<SU, CU, Formatter>::getUsedElements() const {
@@ -198,8 +222,8 @@ template<typename TU>
 MYMTL_INLINE constexpr void Axis2D<SU, CU, Formatter>::draw(Rasteriser rasteriser, const CoordSpace2D<SU, CU, TU>& space) const noexcept {
     const auto hdcStash = rasteriser.saveStateRAII();
 
-    const auto from = space.clientToScreenPoint(endPoints_[kAxisStartIndex]);
-    const auto to = space.clientToScreenPoint(endPoints_[kAxisEndIndex]);
+    const auto from = space.clientToScreenPoint(getEndPoint(PointIndex::Start));
+    const auto to = space.clientToScreenPoint(getEndPoint(PointIndex::End));
 
     if (shouldDrawAxis()) {
         drawAxis(rasteriser, from, to, *axisAttr_);
@@ -220,7 +244,7 @@ MYMTL_INLINE constexpr bool Axis2D<SU, CU, Formatter>::shouldDrawAxis() const no
 }
 
 template<typename SU, typename CU, typename Formatter>
-MYMTL_INLINE constexpr void Axis2D<SU, CU, Formatter>::drawAxis(Rasteriser rasteriser, const ScreenUnitVector& startPoint, const ScreenUnitVector& endPoint, const AxisAttributes& aa) const noexcept {
+MYMTL_INLINE constexpr void Axis2D<SU, CU, Formatter>::drawAxis(Rasteriser rasteriser, const ScreenVector& startPoint, const ScreenVector& endPoint, const AxisAttributes& aa) const noexcept {
     const auto brushResource = (aa.brush) ? std::optional{ rasteriser.selectObjectResource(aa.brush) } : std::nullopt;
     const auto penResource = (aa.pen) ? std::optional{ rasteriser.selectObjectResource(aa.pen) } : std::nullopt;
 
@@ -235,26 +259,26 @@ MYMTL_INLINE constexpr bool Axis2D<SU, CU, Formatter>::shouldDrawTickMarks() con
 template<typename SU, typename CU, typename Formatter>
 template<typename TU>
 MYMTL_INLINE constexpr void Axis2D<SU, CU, Formatter>::drawTickMarks(Rasteriser rasteriser, const CoordSpace2D<SU, CU, TU>& space,
-    const ScreenUnitVector& startPoint, const ScreenUnitVector& endPoint, const TickAttributes& ta) const noexcept {
-    const ClientUnit clampedOrigin = std::clamp(origin_, ends_[kAxisStartIndex], ends_[kAxisEndIndex]);
+    const ScreenVector& startPoint, const ScreenVector& endPoint, const TickAttributes& ta) const noexcept {
+    const ClientUnit clampedOrigin = std::clamp(origin_, getEndValue(PointIndex::Start), getEndValue(PointIndex::End));
 
-    const auto axisDirVectorScreenUnits = (endPoint - startPoint) / static_cast<TU>(ends_[kAxisEndIndex] - ends_[kAxisStartIndex]);
+    const auto axisDirVectorScreenUnits = (endPoint - startPoint) / static_cast<TU>(getEndValue(PointIndex::End) - getEndValue(PointIndex::Start));
 
-    const auto originScreenPoint = (startPoint + axisDirVectorScreenUnits * static_cast<TU>(clampedOrigin - ends_[kAxisStartIndex]));
+    const auto originScreenPoint = startPoint + axisDirVectorScreenUnits * static_cast<TU>(clampedOrigin - getEndValue(PointIndex::Start));
 
     const auto brushResource = (ta.brush) ? std::optional{ rasteriser.selectObjectResource(ta.brush) } : std::nullopt;
     const auto penResource = (ta.pen) ? std::optional{ rasteriser.selectObjectResource(ta.pen) } : std::nullopt;
 
 
-    const auto axisNormalScreenUnits = mymtl::vector_normalize_ert<TU>(space.clientToScreenVector(mymtl::vector_normal(endPoints_[kAxisEndIndex] - endPoints_[kAxisStartIndex])));
+    const auto axisNormalScreenUnits = mymtl::vector_normalize_ert<TU>(space.clientToScreenVector(mymtl::vector_normal(getEndPoint(PointIndex::End) - getEndPoint(PointIndex::Start))));
     // Draw ticks from axis min to origin - offset
-    if (ends_[kAxisStartIndex] + ta.axisEndOffset < clampedOrigin - ta.originOffset && ta.maxCount > 0) {
+    if (getEndValue(PointIndex::Start) + ta.axisEndOffset < clampedOrigin - ta.originOffset && ta.maxCount > 0) {
         const auto computeTickPosition = [origin = clampedOrigin - ta.originOffset, step = ta.step](auto n) noexcept { return origin - n * step; };
 
         std::remove_cv_t<decltype(ta.maxCount)> tickCount = 0;
         auto tickPosition = computeTickPosition(tickCount);
-        while (ends_[kAxisStartIndex] + ta.axisEndOffset <= tickPosition && tickCount < ta.maxCount) {
-            const ScreenUnitVector tickScreenPoint = mymtl::to_vector<typename ScreenUnitVector::value_type, ScreenUnitVector::size()>(originScreenPoint + (tickPosition - clampedOrigin) * axisDirVectorScreenUnits);
+        while (getEndValue(PointIndex::Start) + ta.axisEndOffset <= tickPosition && tickCount < ta.maxCount) {
+            const ScreenVector tickScreenPoint = mymtl::to_vector<typename ScreenVector::value_type, ScreenVector::size()>(originScreenPoint + (tickPosition - clampedOrigin) * axisDirVectorScreenUnits);
             drawTickMarkAt(rasteriser, ta, axisNormalScreenUnits, tickScreenPoint);
 
             tickCount++;
@@ -263,13 +287,13 @@ MYMTL_INLINE constexpr void Axis2D<SU, CU, Formatter>::drawTickMarks(Rasteriser 
     }
 
     // Draw ticks form origin + offset to axis max
-    if (ends_[kAxisEndIndex] - ta.axisEndOffset > clampedOrigin + ta.originOffset && ta.maxCount > 0) {
+    if (getEndValue(PointIndex::End) - ta.axisEndOffset > clampedOrigin + ta.originOffset && ta.maxCount > 0) {
         const auto computeTickPosition = [origin = clampedOrigin + ta.originOffset, step = ta.step](auto n) noexcept { return origin + n * step; };
 
         std::remove_cv_t<decltype(ta.maxCount)> tickCount = 0;
         auto tickPosition = computeTickPosition(tickCount);
-        while (ends_[kAxisEndIndex] - ta.axisEndOffset >= tickPosition && tickCount < ta.maxCount) {
-            const ScreenUnitVector tickScreenPoint = mymtl::to_vector<typename ScreenUnitVector::value_type, ScreenUnitVector::size()>(originScreenPoint + (tickPosition - clampedOrigin) * axisDirVectorScreenUnits);
+        while (getEndValue(PointIndex::End) - ta.axisEndOffset >= tickPosition && tickCount < ta.maxCount) {
+            const ScreenVector tickScreenPoint = mymtl::to_vector<typename ScreenVector::value_type, ScreenVector::size()>(originScreenPoint + (tickPosition - clampedOrigin) * axisDirVectorScreenUnits);
             drawTickMarkAt(rasteriser, ta, axisNormalScreenUnits, tickScreenPoint);
 
             tickCount++;
@@ -280,9 +304,9 @@ MYMTL_INLINE constexpr void Axis2D<SU, CU, Formatter>::drawTickMarks(Rasteriser 
 
 template<typename SU, typename CU, typename Formatter>
 template<typename TU>
-MYMTL_INLINE constexpr void Axis2D<SU, CU, Formatter>::drawTickMarkAt(Rasteriser rasteriser, const TickAttributes& ta, const mymtl::Vector2<TU>& axisUnitNormal, const ScreenUnitVector& tickScreenPoint) const noexcept {
+MYMTL_INLINE constexpr void Axis2D<SU, CU, Formatter>::drawTickMarkAt(Rasteriser rasteriser, const TickAttributes& ta, const mymtl::Vector2<TU>& axisUnitNormal, const ScreenVector& tickScreenPoint) const noexcept {
     //rasteriser.ellipse(tickScreenPoint.x-ta.upperPart, tickScreenPoint.y-ta.upperPart, tickScreenPoint.x+ta.lowerPart, tickScreenPoint.y+ta.lowerPart);
-    const ScreenUnitVector upperPart = mymtl::to_vector<typename ScreenUnitVector::value_type, ScreenUnitVector::size()>(ta.upperPart * axisUnitNormal), lowerPart = mymtl::to_vector<ScreenUnit, axisUnitNormal.size()>(ta.lowerPart * axisUnitNormal);
+    const ScreenVector upperPart = mymtl::to_vector<typename ScreenVector::value_type, ScreenVector::size()>(ta.upperPart * axisUnitNormal), lowerPart = mymtl::to_vector<ScreenUnit, axisUnitNormal.size()>(ta.lowerPart * axisUnitNormal);
 
     rasteriser.line(tickScreenPoint - lowerPart, tickScreenPoint + upperPart);
 }
@@ -297,12 +321,12 @@ inline constexpr bool Axis2D<SU, CU, Formatter>::shouldDisplayLabels() const noe
 template<typename SU, typename CU, typename Formatter>
 template<typename TU>
 MYMTL_INLINE constexpr void Axis2D<SU, CU, Formatter>::displayLabels(Rasteriser rasteriser,
-    const ScreenUnitVector& startPoint, const ScreenUnitVector& endPoint, const LabelAttributes& la) const noexcept {
-    const ClientUnit clampedOrigin = std::clamp(origin_, ends_[kAxisStartIndex], ends_[kAxisEndIndex]);
+    const ScreenVector& startPoint, const ScreenVector& endPoint, const LabelAttributes& la) const noexcept {
+    const ClientUnit clampedOrigin = std::clamp(origin_, getEndValue(PointIndex::Start), getEndValue(PointIndex::End));
 
     const auto axisDirectionScreenUnits = endPoint - startPoint;
-    const auto axisDirectionScreenUnitsPerClientUnit = axisDirectionScreenUnits / static_cast<TU>(ends_[kAxisEndIndex] - ends_[kAxisStartIndex]);
-    const auto originScreenPoint = (startPoint + axisDirectionScreenUnitsPerClientUnit * static_cast<TU>(clampedOrigin - ends_[kAxisStartIndex]));
+    const auto axisDirectionScreenUnitsPerClientUnit = axisDirectionScreenUnits / static_cast<TU>(getEndValue(PointIndex::End) - getEndValue(PointIndex::Start));
+    const auto originScreenPoint = startPoint + axisDirectionScreenUnitsPerClientUnit * static_cast<TU>(clampedOrigin - getEndValue(PointIndex::Start));
 
     const auto fontResource = (la.font) ? std::optional{ rasteriser.selectObjectResource(la.font) } : std::nullopt;
     const auto prevTextAlignment = rasteriser.setTextAlign(la.textAlign);
@@ -311,13 +335,13 @@ MYMTL_INLINE constexpr void Axis2D<SU, CU, Formatter>::displayLabels(Rasteriser 
     const auto axisUnitNormalScreenUnits = mymtl::vector_normal(axisDirUnitVectorScreenUnits);
 
     // Draw labels from axis min to origin - offset
-    if (ends_[kAxisStartIndex] + la.axisEndOffset < clampedOrigin - la.originOffset && la.maxCount > 0) {
+    if (getEndValue(PointIndex::Start) + la.axisEndOffset < clampedOrigin - la.originOffset && la.maxCount > 0) {
         const auto computeLabelPosition = [origin = clampedOrigin - la.originOffset, step = la.step](auto n) noexcept { return origin - n * step; };
 
         std::remove_cv_t<decltype(la.maxCount)> labelCount = 0;
         auto labelPosition = computeLabelPosition(labelCount);
-        while (ends_[kAxisStartIndex] + la.axisEndOffset <= labelPosition && labelCount < la.maxCount) {
-            const ScreenUnitVector labelAxisScreenPoint = mymtl::to_vector<typename ScreenUnitVector::value_type, ScreenUnitVector::size()>(originScreenPoint + (labelPosition - clampedOrigin) * axisDirectionScreenUnitsPerClientUnit);
+        while (getEndValue(PointIndex::Start) + la.axisEndOffset <= labelPosition && labelCount < la.maxCount) {
+            const ScreenVector labelAxisScreenPoint = mymtl::to_vector<typename ScreenVector::value_type, ScreenVector::size()>(originScreenPoint + (labelPosition - clampedOrigin) * axisDirectionScreenUnitsPerClientUnit);
             displayLabelAt(rasteriser, la, labelPosition, axisDirUnitVectorScreenUnits, axisUnitNormalScreenUnits, labelAxisScreenPoint);
 
             labelCount++;
@@ -326,13 +350,13 @@ MYMTL_INLINE constexpr void Axis2D<SU, CU, Formatter>::displayLabels(Rasteriser 
     }
 
     // Draw ticks form origin + offset to axis max
-    if (ends_[kAxisEndIndex] - la.axisEndOffset > clampedOrigin + la.originOffset && la.maxCount > 0) {
+    if (getEndValue(PointIndex::End) - la.axisEndOffset > clampedOrigin + la.originOffset && la.maxCount > 0) {
         const auto computeLabelPosition = [origin = clampedOrigin + la.originOffset, step = la.step](auto n) noexcept { return origin + n * step; };
 
         std::remove_cv_t<decltype(la.maxCount)> labelCount = 0;
         auto labelPosition = computeLabelPosition(labelCount);
-        while (ends_[kAxisEndIndex] - la.axisEndOffset >= labelPosition && labelCount < la.maxCount) {
-            const ScreenUnitVector labelAxisScreenPoint = mymtl::to_vector<typename ScreenUnitVector::value_type, ScreenUnitVector::size()>(originScreenPoint + (labelPosition - clampedOrigin) * axisDirectionScreenUnitsPerClientUnit);
+        while (getEndValue(PointIndex::End) - la.axisEndOffset >= labelPosition && labelCount < la.maxCount) {
+            const ScreenVector labelAxisScreenPoint = mymtl::to_vector<typename ScreenVector::value_type, ScreenVector::size()>(originScreenPoint + (labelPosition - clampedOrigin) * axisDirectionScreenUnitsPerClientUnit);
             displayLabelAt(rasteriser, la, labelPosition, axisDirUnitVectorScreenUnits, axisUnitNormalScreenUnits, labelAxisScreenPoint);
 
             labelCount++;
@@ -346,9 +370,9 @@ MYMTL_INLINE constexpr void Axis2D<SU, CU, Formatter>::displayLabels(Rasteriser 
 template<typename SU, typename CU, typename Formatter>
 template<typename TU>
 MYMTL_INLINE constexpr void Axis2D<SU, CU, Formatter>::displayLabelAt(Rasteriser rasteriser, const LabelAttributes& la, ClientUnit labelPosition, 
-    const mymtl::Vector2<TU>& axisDirUnitVector, const mymtl::Vector2<TU>& axisUnitNormal, const ScreenUnitVector& labelAxisScreenPoint) const noexcept {
+    const mymtl::Vector2<TU>& axisDirUnitVector, const mymtl::Vector2<TU>& axisUnitNormal, const ScreenVector& labelAxisScreenPoint) const noexcept {
 
-    const ScreenUnitVector referencePoint = labelAxisScreenPoint + mymtl::to_vector<typename ScreenUnitVector::value_type, ScreenUnitVector::size()>(axisDirUnitVector * la.textOffset.x + axisUnitNormal * la.textOffset.y);
+    const ScreenVector referencePoint = labelAxisScreenPoint + mymtl::to_vector<typename ScreenVector::value_type, ScreenVector::size()>(axisDirUnitVector * la.textOffset.x + axisUnitNormal * la.textOffset.y);
     rasteriser.textOut(referencePoint, la.formatter(labelPosition));
 }
 

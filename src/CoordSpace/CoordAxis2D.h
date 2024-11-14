@@ -48,8 +48,8 @@ public:
     using ClientUnit = CU;
     using ScreenUnit = SU;
 
-    using ScreenUnitVector = mymtl::Vector2<ScreenUnit>;
-    using ClientUnitVector = mymtl::Vector2<ClientUnit>;
+    using ScreenVector = mymtl::Vector2<ScreenUnit>;
+    using ClientVector = mymtl::Vector2<ClientUnit>;
 
     struct AxisAttributes
     {
@@ -104,7 +104,7 @@ public:
         constexpr LabelAttributes(
             ClientUnit labelStep,
             F&& labelFormatter,
-            ScreenUnitVector labelTextOffset,
+            ScreenVector labelTextOffset,
             unsigned int labelTextAlign,
             HFONT labelFont = nullptr,
             COLORREF labelColour = 0,
@@ -128,7 +128,7 @@ public:
 
         ClientUnit step;
         Formatter formatter;
-        ScreenUnitVector textOffset;
+        ScreenVector textOffset;
         unsigned int textAlign;
 
         HFONT font; // default
@@ -149,12 +149,17 @@ public:
         Abscissa = 0, Ordinate
     };
 
-    static constexpr unsigned short kAxisEndsNumber = 2;
-    static constexpr decltype(kAxisEndsNumber) kAxisStartIndex = 0;
-    static constexpr decltype(kAxisEndsNumber) kAxisEndIndex = 1;
+    static constexpr const std::uint8_t kAxisEndsNumber = 2;
+
+    enum class PointIndex : std::uint8_t
+    {
+        Start = 0, End = 1
+    };
+    //static constexpr const std::uint8_t kAxisStartIndex = 0;
+    //static constexpr const std::uint8_t kAxisEndIndex = 1;
 
     // Adjusts axis parameters with default values
-    constexpr Axis2D(const std::array<ClientUnitVector, kAxisEndsNumber>& axisEndPoints, const std::array<ClientUnit, kAxisEndsNumber>& axisEnds, ClientUnit origin = {},
+    constexpr Axis2D(const std::array<ClientVector, kAxisEndsNumber>& axisEndPoints, const std::array<ClientUnit, kAxisEndsNumber>& axisEnds, ClientUnit origin = {},
         const std::optional<AxisAttributes>& axisAttributes = std::nullopt,
         const std::optional<TickAttributes>& tickAttributes = std::nullopt,
         const std::optional<LabelAttributes>& labelAttributes = std::nullopt) noexcept;
@@ -174,10 +179,13 @@ public:
     //int getUsedElements() const;
     //int deselUsedElem( UsingElem deselElem );
 
-    constexpr void setStartPoint(const ClientUnitVector& startPoint) noexcept;
-    constexpr void setEndPoint(const ClientUnitVector& endPoint) noexcept;
-
-    //	const ClientUnitVector& endPoint) noexcept;
+    constexpr void setEndPoint(const ClientVector& endPoint, PointIndex axisPointIndex) noexcept;
+    MYMTL_NO_DISCARD constexpr const ClientVector& getEndPoint(PointIndex axisPointIndex) const noexcept;
+    MYMTL_NO_DISCARD constexpr const auto& getEndPoints() const noexcept;
+    
+    constexpr void setEndValue(ClientUnit endValue, PointIndex axisPointIndex) noexcept;
+    MYMTL_NO_DISCARD constexpr ClientUnit getEndValue(PointIndex axisPointIndex) const noexcept;
+    MYMTL_NO_DISCARD constexpr const auto& getEndValues() const noexcept;
 
     //void setAxisName( const gstring& newName );
     //const gstring& axisName() const;
@@ -191,31 +199,30 @@ public:
 private:
     MYMTL_NO_DISCARD constexpr bool shouldDrawAxis() const noexcept;
 
-    constexpr void drawAxis(Rasteriser rasteriser, const ScreenUnitVector& startPoint, const ScreenUnitVector& endPoint, const AxisAttributes& aa) const noexcept;
+    constexpr void drawAxis(Rasteriser rasteriser, const ScreenVector& startPoint, const ScreenVector& endPoint, const AxisAttributes& aa) const noexcept;
 
     MYMTL_NO_DISCARD constexpr bool shouldDrawTickMarks() const noexcept;
 
     template<typename TU>
-    constexpr void drawTickMarks(Rasteriser rasteriser, const CoordSpace2D<SU, CU, TU>& space, const ScreenUnitVector& startPoint, const ScreenUnitVector& endPoint, const TickAttributes& ta) const noexcept;
+    constexpr void drawTickMarks(Rasteriser rasteriser, const CoordSpace2D<SU, CU, TU>& space, const ScreenVector& startPoint, const ScreenVector& endPoint, const TickAttributes& ta) const noexcept;
 
     template<typename TU>
-    constexpr void drawTickMarkAt(Rasteriser rasteriser, const TickAttributes& ta, const mymtl::Vector2<TU>& axisUnitNormal, const ScreenUnitVector& tickScreenPoint) const noexcept;
+    constexpr void drawTickMarkAt(Rasteriser rasteriser, const TickAttributes& ta, const mymtl::Vector2<TU>& axisUnitNormal, const ScreenVector& tickScreenPoint) const noexcept;
 
     MYMTL_NO_DISCARD constexpr bool shouldDisplayLabels() const noexcept;
 
     template<typename TU>
-    constexpr void displayLabels(Rasteriser rasteriser, const ScreenUnitVector& startPoint, const ScreenUnitVector& endPoint, const LabelAttributes& la) const noexcept;
+    constexpr void displayLabels(Rasteriser rasteriser, const ScreenVector& startPoint, const ScreenVector& endPoint, const LabelAttributes& la) const noexcept;
 
     template<typename TU>
     constexpr void displayLabelAt(Rasteriser rasteriser, const LabelAttributes& la, ClientUnit labelPosition,
-        const mymtl::Vector2<TU>& axisDirUnitVector, const mymtl::Vector2<TU>& axisUnitNormal, const ScreenUnitVector& labelAxisScreenPoint) const noexcept;
+        const mymtl::Vector2<TU>& axisDirUnitVector, const mymtl::Vector2<TU>& axisUnitNormal, const ScreenVector& labelAxisScreenPoint) const noexcept;
 
-public:
-    std::array<ClientUnitVector, kAxisEndsNumber> endPoints_;
+private:
+    std::array<ClientVector, kAxisEndsNumber> endPoints_;
     std::array<ClientUnit, kAxisEndsNumber> ends_;
     ClientUnit origin_;
 
-private:
     std::optional<AxisAttributes> axisAttr_;
     std::optional<TickAttributes> tickAttr_;
     std::optional<LabelAttributes> labelAttr_;
