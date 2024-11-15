@@ -41,7 +41,7 @@ END_MESSAGE_MAP()
 CCoordSysGraphDoc::CCoordSysGraphDoc() noexcept
 {
 	// TODO: add one-time construction code here
-
+	int a = 4;
 }
 
 CCoordSysGraphDoc::~CCoordSysGraphDoc()

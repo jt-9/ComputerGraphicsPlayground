@@ -38,6 +38,9 @@
     <Filter Include="gdi\MemoryDC">
       <UniqueIdentifier>{fb86b9b6-2812-4bad-9c6d-0c208cc0fe54}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ui">
+      <UniqueIdentifier>{f737933c-d3d1-42fc-89b5-787b12c3fba4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="CoordSysGraph.rc">
@@ -233,6 +236,9 @@
     </ClInclude>
     <ClInclude Include="..\..\src\CoordSpace\LabelFormatter.hpp">
       <Filter>CoordSpace</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ui\CoordSysRibbonHelper.hpp">
+      <Filter>ui</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

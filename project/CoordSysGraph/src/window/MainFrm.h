@@ -14,6 +14,7 @@
 
 #pragma once
 #include "OutputWnd.h"
+#include "CoordSysRibbonHelper.hpp"
 
 class CMainFrame : public CFrameWndEx
 {
@@ -30,11 +31,11 @@ public:
 
 // Overrides
 public:
-    virtual BOOL PreCreateWindow(CREATESTRUCT& cs);
+    BOOL PreCreateWindow(CREATESTRUCT& cs) override;
 
 // Implementation
 public:
-    virtual ~CMainFrame();
+    ~CMainFrame() override;
 #ifdef _DEBUG
     virtual void AssertValid() const;
     virtual void Dump(CDumpContext& dc) const;
@@ -46,6 +47,7 @@ protected:  // control bar embedded members
     CMFCToolBarImages m_PanelImages;
     CMFCRibbonStatusBar  m_wndStatusBar;
     COutputWnd        m_wndOutput;
+    CoordSys2DRibbonEditControls m_ctrlRibbonEdit;
 
 // Generated message map functions
 protected:
@@ -55,8 +57,16 @@ protected:
     afx_msg void OnSettingChange(UINT uFlags, LPCTSTR lpszSection);
     DECLARE_MESSAGE_MAP()
 
-    BOOL CreateDockingWindows();
-    void SetDockingWindowIcons(BOOL bHiColorIcons);
+    BOOL CreateDockingWindows() noexcept;
+    void SetDockingWindowIcons(BOOL bHiColorIcons) noexcept;
+private:
+    [[nodiscard]] CoordSys2DRibbonEditControls initRibbonEditControls() const noexcept;
+
+public:
+    afx_msg void OnEditCoordXmin();
+    afx_msg void OnEditCoordYmin();
+    afx_msg void OnEditCoordXmax();
+    afx_msg void OnEditCoordYmax();
 };
 
 

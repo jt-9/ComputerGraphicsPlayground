@@ -113,10 +113,27 @@ MYMTL_INLINE constexpr typename CartesianCoordSys2D<SU, CU, TU, Formatter>::Clie
 }
 
 template<typename SU, typename CU, typename TU, typename Formatter>
-MYMTL_INLINE constexpr auto& CartesianCoordSys2D<SU, CU, TU, Formatter>::setAxisPoint(const ClientVector& endPoint, typename Axis::Name axisName, std::uint8_t axisPointIndex) noexcept {
+MYMTL_INLINE constexpr auto& CartesianCoordSys2D<SU, CU, TU, Formatter>::setAxisEnd(const ClientUnit endValue, typename Axis::Name axisName, typename Axis::PointIndex axisPointIndex) noexcept {
+    axes_[mapAxisNameToIndex(axisName)].setEndValue(endValue, axisPointIndex);
+
+    return *this;
+}
+
+template<typename SU, typename CU, typename TU, typename Formatter>
+MYMTL_INLINE constexpr typename CartesianCoordSys2D<SU, CU, TU, Formatter>::ClientUnit CartesianCoordSys2D<SU, CU, TU, Formatter>::getAxisEnd(typename Axis::Name axisName, typename Axis::PointIndex axisPointIndex) const noexcept {
+    return axes_[mapAxisNameToIndex(axisName)].getEndValue(axisPointIndex);
+}
+
+template<typename SU, typename CU, typename TU, typename Formatter>
+MYMTL_INLINE constexpr auto& CartesianCoordSys2D<SU, CU, TU, Formatter>::setAxisPoint(const ClientVector& endPoint, typename Axis::Name axisName, typename Axis::PointIndex axisPointIndex) noexcept {
     axes_[mapAxisNameToIndex(axisName)].setEndPoint(endPoint, axisPointIndex);
 
     return *this;
+}
+
+template<typename SU, typename CU, typename TU, typename Formatter>
+MYMTL_INLINE constexpr const CartesianCoordSys2D<SU, CU, TU, Formatter>::ClientVector& CartesianCoordSys2D<SU, CU, TU, Formatter>::getAxisPoint(typename Axis::Name axisName, typename Axis::PointIndex axisPointIndex) const noexcept {
+    return axes_[mapAxisNameToIndex(axisName)].getEndPoint(axisPointIndex);
 }
 
 template<typename SU, typename CU, typename TU, typename Formatter>

@@ -8,6 +8,7 @@
 
 #include <array>
 #include <optional>
+#include <utility>
 
 MY_COORD_SPACE_BEGIN
 
@@ -21,6 +22,7 @@ public:
 
     using Axis = Axis2D<ScreenUnit, ClientUnit, Formatter>;
     using Axes = std::array<Axis, Space::kDimensions>;
+   
     using ClientVector = mymtl::VectorN<ClientUnit, Space::kDimensions>;
     using ScreenVector = mymtl::VectorN<ScreenUnit, Space::kDimensions>;
 
@@ -79,7 +81,11 @@ public:
     constexpr auto& setOrigin(const ClientVector& origin) noexcept;
     MY_COORD_SPACE_ATTR_NO_DISCARD constexpr ClientVector getOrigin() noexcept;
 
-    constexpr auto& setAxisPoint(const ClientVector& endPoint, typename Axis::Name axisName, std::uint8_t axisPointIndex) noexcept;
+    constexpr auto& setAxisPoint(const ClientVector& endPoint, typename Axis::Name axisName, typename Axis::PointIndex axisPointIndex) noexcept;
+    MY_COORD_SPACE_ATTR_NO_DISCARD constexpr const ClientVector& getAxisPoint(typename Axis::Name axisName, typename Axis::PointIndex axisPointIndex) const noexcept;
+
+    constexpr auto& setAxisEnd(const ClientUnit endValue, typename Axis::Name axisName, typename Axis::PointIndex axisPointIndex) noexcept;
+    MY_COORD_SPACE_ATTR_NO_DISCARD constexpr ClientUnit getAxisEnd(typename Axis::Name axisName, typename Axis::PointIndex axisPointIndex) const noexcept;
 
     constexpr void recalculateTransformation() noexcept;
 
