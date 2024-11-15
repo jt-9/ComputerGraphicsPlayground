@@ -17,6 +17,7 @@
 #include "CoordSysGraph.h"
 
 #include "MainFrm.h"
+#include "CoordSysRibbonHelper.hpp"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -31,11 +32,16 @@ BEGIN_MESSAGE_MAP(CMainFrame, CFrameWndEx)
     ON_COMMAND_RANGE(ID_VIEW_APPLOOK_WIN_2000, ID_VIEW_APPLOOK_WINDOWS_7, &CMainFrame::OnApplicationLook)
     ON_UPDATE_COMMAND_UI_RANGE(ID_VIEW_APPLOOK_WIN_2000, ID_VIEW_APPLOOK_WINDOWS_7, &CMainFrame::OnUpdateApplicationLook)
     ON_WM_SETTINGCHANGE()
+    ON_COMMAND(ID_EDIT_COORD_XMIN, &CMainFrame::OnEditCoordXmin)
+    ON_COMMAND(ID_EDIT_COORD_YMIN, &CMainFrame::OnEditCoordYmin)
+    ON_COMMAND(ID_EDIT_COORD_XMAX, &CMainFrame::OnEditCoordXmax)
+    ON_COMMAND(ID_EDIT_COORD_YMAX, &CMainFrame::OnEditCoordYmax)
 END_MESSAGE_MAP()
 
 // CMainFrame construction/destruction
 
 CMainFrame::CMainFrame() noexcept
+    : m_ctrlRibbonEdit{ .editXmin_ = nullptr, .editYmin_ = nullptr, .editXmax_ = nullptr, .editYmax_ = nullptr }
 {
     // TODO: add member initialization code here
     theApp.m_nAppLook = theApp.GetInt(_T("ApplicationLook"), ID_VIEW_APPLOOK_WINDOWS_7);
@@ -49,11 +55,14 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 {
     if (CFrameWndEx::OnCreate(lpCreateStruct) == -1)
         return -1;
-
-    BOOL bNameValid;
-
+    
     m_wndRibbonBar.Create(this);
-    m_wndRibbonBar.LoadFromResource(IDR_RIBBON);
+    if (!m_wndRibbonBar.LoadFromResource(IDR_RIBBON)) {
+        TRACE0("Failed to create ribbon\n");
+        return -1;      // fail to create
+    }
+
+    m_ctrlRibbonEdit = initRibbonEditControls();
 
     if (!m_wndStatusBar.Create(this))
     {
@@ -63,7 +72,7 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 
     CString strTitlePane1;
     CString strTitlePane2;
-    bNameValid = strTitlePane1.LoadString(IDS_STATUS_PANE1);
+    auto bNameValid = strTitlePane1.LoadString(IDS_STATUS_PANE1);
     ASSERT(bNameValid);
     bNameValid = strTitlePane2.LoadString(IDS_STATUS_PANE2);
     ASSERT(bNameValid);
@@ -93,7 +102,7 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 
 BOOL CMainFrame::PreCreateWindow(CREATESTRUCT& cs)
 {
-    if( !CFrameWndEx::PreCreateWindow(cs) )
+    if (!CFrameWndEx::PreCreateWindow(cs))
         return FALSE;
     // TODO: Modify the Window class or styles here by modifying
     //  the CREATESTRUCT cs
@@ -101,12 +110,11 @@ BOOL CMainFrame::PreCreateWindow(CREATESTRUCT& cs)
     return TRUE;
 }
 
-BOOL CMainFrame::CreateDockingWindows()
+BOOL CMainFrame::CreateDockingWindows() noexcept
 {
-    BOOL bNameValid;
     // Create output window
     CString strOutputWnd;
-    bNameValid = strOutputWnd.LoadString(IDS_OUTPUT_WND);
+    const BOOL bNameValid = strOutputWnd.LoadString(IDS_OUTPUT_WND);
     ASSERT(bNameValid);
     if (!m_wndOutput.Create(strOutputWnd, this, CRect(0, 0, 100, 100), TRUE, ID_VIEW_OUTPUTWND, WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN | CBRS_BOTTOM | CBRS_FLOAT_MULTI))
     {
@@ -118,11 +126,20 @@ BOOL CMainFrame::CreateDockingWindows()
     return TRUE;
 }
 
-void CMainFrame::SetDockingWindowIcons(BOOL bHiColorIcons)
+void CMainFrame::SetDockingWindowIcons(BOOL bHiColorIcons) noexcept
 {
     HICON hOutputBarIcon = (HICON) ::LoadImage(::AfxGetResourceHandle(), MAKEINTRESOURCE(bHiColorIcons ? IDI_OUTPUT_WND_HC : IDI_OUTPUT_WND), IMAGE_ICON, ::GetSystemMetrics(SM_CXSMICON), ::GetSystemMetrics(SM_CYSMICON), 0);
     m_wndOutput.SetIcon(hOutputBarIcon, FALSE);
+}
 
+CoordSys2DRibbonEditControls CMainFrame::initRibbonEditControls() const noexcept
+{
+    return CoordSys2DRibbonEditControls{
+        .editXmin_ = static_cast<CMFCRibbonEdit*>(m_wndRibbonBar.FindByID(ID_EDIT_COORD_XMIN)),
+        .editYmin_ = static_cast<CMFCRibbonEdit*>(m_wndRibbonBar.FindByID(ID_EDIT_COORD_YMIN)),
+        .editXmax_ = static_cast<CMFCRibbonEdit*>(m_wndRibbonBar.FindByID(ID_EDIT_COORD_XMAX)),
+        .editYmax_ = static_cast<CMFCRibbonEdit*>(m_wndRibbonBar.FindByID(ID_EDIT_COORD_YMAX))
+    };
 }
 
 // CMainFrame diagnostics
@@ -231,4 +248,30 @@ void CMainFrame::OnSettingChange(UINT uFlags, LPCTSTR lpszSection)
 {
     CFrameWndEx::OnSettingChange(uFlags, lpszSection);
     m_wndOutput.UpdateFonts();
+}
+
+void CMainFrame::OnEditCoordXmin()
+{
+    IRibbonEditCtrlOnCommand* view = dynamic_cast<IRibbonEditCtrlOnCommand*>(GetActiveView());
+    view->onCommand(m_wndRibbonBar, *m_ctrlRibbonEdit.editXmin_);
+}
+
+void CMainFrame::OnEditCoordYmin()
+{
+    IRibbonEditCtrlOnCommand* view = dynamic_cast<IRibbonEditCtrlOnCommand*>(GetActiveView());
+    view->onCommand(m_wndRibbonBar, *m_ctrlRibbonEdit.editYmin_);
+}
+
+
+void CMainFrame::OnEditCoordXmax()
+{
+    IRibbonEditCtrlOnCommand* view = dynamic_cast<IRibbonEditCtrlOnCommand*>(GetActiveView());
+    view->onCommand(m_wndRibbonBar, *m_ctrlRibbonEdit.editXmax_);
+}
+
+
+void CMainFrame::OnEditCoordYmax()
+{
+    IRibbonEditCtrlOnCommand* view = dynamic_cast<IRibbonEditCtrlOnCommand*>(GetActiveView());
+    view->onCommand(m_wndRibbonBar, *m_ctrlRibbonEdit.editYmax_);
 }

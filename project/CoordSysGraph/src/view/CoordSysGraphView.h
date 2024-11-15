@@ -18,8 +18,9 @@
 #include "LabelFormatter.hpp"
 #include "windows_gdi_deleter.hpp"
 #include "unique_rc.hpp"
+#include "CoordSysRibbonHelper.hpp"
 
-class CCoordSysGraphView : public CScrollView
+class CCoordSysGraphView : public CScrollView, public IRibbonEditCtrlOnCommand
 {
 protected: // create from serialization only
     CCoordSysGraphView() noexcept;
@@ -36,6 +37,8 @@ public:
 public:
     void OnDraw(CDC* pDC) override;  // overridden to draw this view
     BOOL PreCreateWindow(CREATESTRUCT& cs) override;
+    void onCommand(CMFCRibbonBar& ribbon, CMFCRibbonEdit& edit) noexcept override;
+
 protected:
     void OnInitialUpdate() override; // called first time after construct
 
@@ -65,8 +68,11 @@ protected:
     DECLARE_MESSAGE_MAP()
 
 private:
+    void setBoundingValueToEditField(CMFCRibbonEdit& edit) const noexcept;
     void drawScene(HDC paintDC) noexcept;
     void invalidateScene(RECT clientRect) noexcept;
+public:
+//    afx_msg void OnEditCoordXmin();
 };
 
 #ifndef _DEBUG  // debug version in CoordSysGraphView.cpp
