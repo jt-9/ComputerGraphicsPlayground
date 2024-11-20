@@ -16,7 +16,7 @@
 #include "OutputWnd.h"
 #include "CoordSysRibbonHelper.hpp"
 
-class CMainFrame : public CFrameWndEx
+class CMainFrame : public CFrameWndEx, public IRibbonCtrlProvider
 {
     
 protected: // create from serialization only
@@ -32,6 +32,7 @@ public:
 // Overrides
 public:
     BOOL PreCreateWindow(CREATESTRUCT& cs) override;
+    CMFCRibbonEdit& getRibbonEdit(UINT ctrlID) const noexcept override;
 
 // Implementation
 public:

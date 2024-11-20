@@ -22,11 +22,15 @@ MY_COORD_SPACE_BEGIN
 
 template<typename Unit>
 struct CoordSpaceBasis2D {
+    static constexpr std::int16_t kPoints = 3;
+
+    using Points = std::array<mymtl::Vector2<Unit>, kPoints>;
+
     CoordSpaceBasis2D() noexcept = default;
     ~CoordSpaceBasis2D() noexcept = default;
 
     constexpr CoordSpaceBasis2D(const mymtl::Vector2<Unit>& pt1, const mymtl::Vector2<Unit>& pt2, const mymtl::Vector2<Unit>& pt3) noexcept;
-    constexpr CoordSpaceBasis2D(const std::array<mymtl::Vector2<Unit>, 3>& pts) noexcept;
+    constexpr CoordSpaceBasis2D(const Points& pts) noexcept;
 
     CoordSpaceBasis2D(const CoordSpaceBasis2D& src) noexcept = default;
     CoordSpaceBasis2D& operator = (const CoordSpaceBasis2D& rhs) noexcept = default;
@@ -66,7 +70,7 @@ struct CoordSpaceBasis2D {
         return pts_.size();
     }
 
-    std::array<mymtl::Vector2<Unit>, 3> pts_;
+    Points pts_;
 };
 
 

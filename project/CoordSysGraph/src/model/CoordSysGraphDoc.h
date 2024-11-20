@@ -15,12 +15,13 @@
 
 #pragma once
 
+#include "CoordSysGraphModels.hpp"
 
 class CCoordSysGraphDoc : public CDocument
 {
 protected: // create from serialization only
-	CCoordSysGraphDoc() noexcept;
-	DECLARE_DYNCREATE(CCoordSysGraphDoc)
+    CCoordSysGraphDoc() noexcept;
+    DECLARE_DYNCREATE(CCoordSysGraphDoc)
 
 // Attributes
 public:
@@ -30,29 +31,36 @@ public:
 
 // Overrides
 public:
-	BOOL OnNewDocument() override;
-	void Serialize(CArchive& ar) override;
+    BOOL OnNewDocument() override;
+    void Serialize(CArchive& ar) override;
 #ifdef SHARED_HANDLERS
-	void InitializeSearchContent() override;
-	void OnDrawThumbnail(CDC& dc, LPRECT lprcBounds) override;
+    void InitializeSearchContent() override;
+    void OnDrawThumbnail(CDC& dc, LPRECT lprcBounds) override;
 #endif // SHARED_HANDLERS
 
 // Implementation
 public:
-	~CCoordSysGraphDoc() override;
+    ~CCoordSysGraphDoc() override;
 #ifdef _DEBUG
-	virtual void AssertValid() const;
-	virtual void Dump(CDumpContext& dc) const;
+    virtual void AssertValid() const;
+    virtual void Dump(CDumpContext& dc) const;
 #endif
 
 protected:
 
 // Generated message map functions
 protected:
-	DECLARE_MESSAGE_MAP()
+    DECLARE_MESSAGE_MAP()
 
 #ifdef SHARED_HANDLERS
-	// Helper function that sets search content for a Search Handler
-	void SetSearchContent(const CString& value);
+    // Helper function that sets search content for a Search Handler
+    void SetSearchContent(const CString& value);
 #endif // SHARED_HANDLERS
+private:
+    CoordSys2D::BoundingBox spaceBoundRect_;
+
+public:
+    constexpr const CoordSys2D::BoundingBox& getBoundRect() const noexcept {
+        return spaceBoundRect_;
+    }
 };

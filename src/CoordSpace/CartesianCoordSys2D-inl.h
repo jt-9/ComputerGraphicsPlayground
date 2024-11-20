@@ -56,12 +56,12 @@ MYMTL_INLINE constexpr CartesianCoordSys2D<SU, CU, TU, Formatter>::CartesianCoor
     const std::optional<std::array<std::optional<LabelAttributes>, Space::kDimensions>>& la) noexcept
     : space_{ clientSpace, m }, axes_{
         Axis{
-            computeAxisEndPoints(boundBox, origin, Axis::Abscissa), computeAxisEnds(boundBox, Axis::Abscissa), computeAxisOrigin(origin, Axis::Abscissa), 
-            getAttributesForAxis(aa, Axis::Abscissa), getAttributesForAxis(ta, Axis::Abscissa), getAttributesForAxis(la, Axis::Abscissa)
+            computeAxisEndPoints(boundBox, origin, coordsys::AxisName::Abscissa), computeAxisEnds(boundBox, coordsys::AxisName::Abscissa), computeAxisOrigin(origin, coordsys::AxisName::Abscissa),
+            getAttributesForAxis(aa, coordsys::AxisName::Abscissa), getAttributesForAxis(ta, coordsys::AxisName::Abscissa), getAttributesForAxis(la, coordsys::AxisName::Abscissa)
         },
         Axis{
-            computeAxisEndPoints(boundBox, origin, Axis::Ordinate), computeAxisEnds(boundBox, Axis::Ordinate), computeAxisOrigin(origin, Axis::Ordinate), 
-            getAttributesForAxis(aa, Axis::Ordinate), getAttributesForAxis(ta, Axis::Ordinate), getAttributesForAxis(la, Axis::Ordinate)
+            computeAxisEndPoints(boundBox, origin, coordsys::AxisName::Ordinate), computeAxisEnds(boundBox, coordsys::AxisName::Ordinate), computeAxisOrigin(origin, coordsys::AxisName::Ordinate),
+            getAttributesForAxis(aa, coordsys::AxisName::Ordinate), getAttributesForAxis(ta, coordsys::AxisName::Ordinate), getAttributesForAxis(la, coordsys::AxisName::Ordinate)
         }
     }
 {
@@ -113,26 +113,33 @@ MYMTL_INLINE constexpr typename CartesianCoordSys2D<SU, CU, TU, Formatter>::Clie
 }
 
 template<typename SU, typename CU, typename TU, typename Formatter>
-MYMTL_INLINE constexpr auto& CartesianCoordSys2D<SU, CU, TU, Formatter>::setAxisEnd(const ClientUnit endValue, typename Axis::Name axisName, typename Axis::PointIndex axisPointIndex) noexcept {
+MYMTL_INLINE constexpr auto& CartesianCoordSys2D<SU, CU, TU, Formatter>::setAxisEnd(const ClientUnit endValue, AxisName axisName, typename Axis::PointIndex axisPointIndex, bool updatePoint) noexcept {
     axes_[mapAxisNameToIndex(axisName)].setEndValue(endValue, axisPointIndex);
+
+    if (updatePoint) {
+        const auto changeIndex = mapAxisNameToIndex(axisName);
+        ClientVector endPoint = axes_[changeIndex].getEndPoint(axisPointIndex);
+        endPoint[changeIndex] = endValue;
+        axes_[changeIndex].setEndPoint(endPoint, axisPointIndex);
+    }
 
     return *this;
 }
 
 template<typename SU, typename CU, typename TU, typename Formatter>
-MYMTL_INLINE constexpr typename CartesianCoordSys2D<SU, CU, TU, Formatter>::ClientUnit CartesianCoordSys2D<SU, CU, TU, Formatter>::getAxisEnd(typename Axis::Name axisName, typename Axis::PointIndex axisPointIndex) const noexcept {
+MYMTL_INLINE constexpr typename CartesianCoordSys2D<SU, CU, TU, Formatter>::ClientUnit CartesianCoordSys2D<SU, CU, TU, Formatter>::getAxisEnd(AxisName axisName, typename Axis::PointIndex axisPointIndex) const noexcept {
     return axes_[mapAxisNameToIndex(axisName)].getEndValue(axisPointIndex);
 }
 
 template<typename SU, typename CU, typename TU, typename Formatter>
-MYMTL_INLINE constexpr auto& CartesianCoordSys2D<SU, CU, TU, Formatter>::setAxisPoint(const ClientVector& endPoint, typename Axis::Name axisName, typename Axis::PointIndex axisPointIndex) noexcept {
+MYMTL_INLINE constexpr auto& CartesianCoordSys2D<SU, CU, TU, Formatter>::setAxisPoint(const ClientVector& endPoint, AxisName axisName, typename Axis::PointIndex axisPointIndex) noexcept {
     axes_[mapAxisNameToIndex(axisName)].setEndPoint(endPoint, axisPointIndex);
 
     return *this;
 }
 
 template<typename SU, typename CU, typename TU, typename Formatter>
-MYMTL_INLINE constexpr const CartesianCoordSys2D<SU, CU, TU, Formatter>::ClientVector& CartesianCoordSys2D<SU, CU, TU, Formatter>::getAxisPoint(typename Axis::Name axisName, typename Axis::PointIndex axisPointIndex) const noexcept {
+MYMTL_INLINE constexpr const CartesianCoordSys2D<SU, CU, TU, Formatter>::ClientVector& CartesianCoordSys2D<SU, CU, TU, Formatter>::getAxisPoint(AxisName axisName, typename Axis::PointIndex axisPointIndex) const noexcept {
     return axes_[mapAxisNameToIndex(axisName)].getEndPoint(axisPointIndex);
 }
 
@@ -186,11 +193,22 @@ MYMTL_INLINE constexpr auto CartesianCoordSys2D<SU, CU, TU, Formatter>::setPixel
 }
 
 template<typename SU, typename CU, typename TU, typename Formatter>
-MYMTL_INLINE constexpr auto CartesianCoordSys2D<SU, CU, TU, Formatter>::ellipse(Rasteriser r, ClientUnit left, ClientUnit top, ClientUnit right, ClientUnit bottom) const noexcept {
-    const auto tl = space_.clientToScreenPoint(left, top);
-    const auto rb = space_.clientToScreenPoint(right, bottom);
+MYMTL_INLINE constexpr auto CartesianCoordSys2D<SU, CU, TU, Formatter>::ellipse(Rasteriser r, ClientUnit boundingLeft, ClientUnit boundingTop, ClientUnit boundingRight, ClientUnit boundingBottom) const noexcept {
+    const auto tl = space_.clientToScreenPoint(boundingLeft, boundingTop);
+    const auto rb = space_.clientToScreenPoint(boundingRight, boundingBottom);
 
-    return r.ellipse(static_cast<SU>(tl.x), static_cast<SU>(tl.y), static_cast<SU>(rb.x), static_cast<SU>(rb.y));
+    return r.ellipse(tl, rb);
+}
+
+template<typename SU, typename CU, typename TU, typename Formatter>
+MYMTL_INLINE constexpr auto CartesianCoordSys2D<SU, CU, TU, Formatter>::arc(Rasteriser r, ClientUnit boundingLeft, ClientUnit boundingTop, ClientUnit boundingRight, ClientUnit boundingBottom,
+        ClientUnit startX, ClientUnit startY, ClientUnit endX, ClientUnit endY) const noexcept {
+    const auto tl = space_.clientToScreenPoint(boundingLeft, boundingTop);
+    const auto rb = space_.clientToScreenPoint(boundingRight, boundingBottom);
+    const auto startPoint = space_.clientToScreenPoint(startX, startY);
+    const auto endPoint = space_.clientToScreenPoint(endX, endY);
+
+    return r.arc(tl, rb, startPoint, endPoint);
 }
 
 template<typename SU, typename CU, typename TU, typename Formatter>

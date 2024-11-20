@@ -14,8 +14,7 @@
 
 #pragma once
 
-#include "CartesianCoordSys2D.h"
-#include "LabelFormatter.hpp"
+#include "CoordSysGraphModels.hpp"
 #include "windows_gdi_deleter.hpp"
 #include "unique_rc.hpp"
 #include "CoordSysRibbonHelper.hpp"
@@ -49,9 +48,7 @@ public:
     void AssertValid() const override;
     void Dump(CDumpContext& dc) const override;
 #endif
-
-public:
-    using CoordSys2D = coordsys::CartesianCoordSys2D<int, float, float, coordsys::LabelFormatter<float>>;
+    
 private:
     raii::unique_rc<HBRUSH, raii::gdi_delete_object_nullptr<HBRUSH>> tickBrush_;
     raii::unique_rc<HPEN, raii::gdi_delete_object_nullptr<HPEN>> tickPen_;
@@ -69,6 +66,7 @@ protected:
 
 private:
     void setBoundingValueToEditField(CMFCRibbonEdit& edit) const noexcept;
+    void setupRibbonCtrls(const IRibbonCtrlProvider& provider) const noexcept;
     void drawScene(HDC paintDC) noexcept;
     void invalidateScene(RECT clientRect) noexcept;
 public:
