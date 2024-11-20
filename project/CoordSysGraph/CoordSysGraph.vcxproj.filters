@@ -240,5 +240,8 @@
     <ClInclude Include="src\ui\CoordSysRibbonHelper.hpp">
       <Filter>ui</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\CoordSpace\CartesianCoordSysAxisName.hpp">
+      <Filter>CoordSpace</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

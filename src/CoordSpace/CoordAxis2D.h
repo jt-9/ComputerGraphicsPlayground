@@ -4,9 +4,11 @@
 #pragma once
 
 #include "CoordSpaceDefs.h"
+
+#include "CoordSpace2D.h"
+#include "CartesianCoordSysAxisName.hpp"
 #include "ApeMath.h"
 #include "Rasteriser.h"
-#include "CoordSpace2D.h"
 
 #include <Windows.h> // for HDC and other window types
 
@@ -143,11 +145,6 @@ public:
     };
 
     enum UsingElem : std::uint16_t { use_axis = 1, use_label = 2, use_tick = 4 };
-
-    enum Name
-    {
-        Abscissa = 0, Ordinate
-    };
 
     static constexpr const std::uint8_t kAxisEndsNumber = 2;
 

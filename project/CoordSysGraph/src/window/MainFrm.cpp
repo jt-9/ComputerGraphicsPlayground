@@ -19,6 +19,8 @@
 #include "MainFrm.h"
 #include "CoordSysRibbonHelper.hpp"
 
+#include <exception>
+
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
@@ -55,7 +57,7 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 {
     if (CFrameWndEx::OnCreate(lpCreateStruct) == -1)
         return -1;
-    
+
     m_wndRibbonBar.Create(this);
     if (!m_wndRibbonBar.LoadFromResource(IDR_RIBBON)) {
         TRACE0("Failed to create ribbon\n");
@@ -274,4 +276,21 @@ void CMainFrame::OnEditCoordYmax()
 {
     IRibbonEditCtrlOnCommand* view = dynamic_cast<IRibbonEditCtrlOnCommand*>(GetActiveView());
     view->onCommand(m_wndRibbonBar, *m_ctrlRibbonEdit.editYmax_);
+}
+
+CMFCRibbonEdit& CMainFrame::getRibbonEdit(UINT ctrlID) const noexcept
+{
+    switch (ctrlID) {
+    case ID_EDIT_COORD_XMIN:
+        return *m_ctrlRibbonEdit.editXmin_;
+    case ID_EDIT_COORD_YMIN:
+        return *m_ctrlRibbonEdit.editYmin_;
+    case ID_EDIT_COORD_XMAX:
+        return *m_ctrlRibbonEdit.editXmax_;
+    case ID_EDIT_COORD_YMAX:
+        return *m_ctrlRibbonEdit.editYmax_;
+
+    default:
+        throw std::exception("Invalid ctrl id");
+    }
 }

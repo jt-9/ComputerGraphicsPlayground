@@ -81,11 +81,11 @@ public:
     constexpr auto& setOrigin(const ClientVector& origin) noexcept;
     MY_COORD_SPACE_ATTR_NO_DISCARD constexpr ClientVector getOrigin() noexcept;
 
-    constexpr auto& setAxisPoint(const ClientVector& endPoint, typename Axis::Name axisName, typename Axis::PointIndex axisPointIndex) noexcept;
-    MY_COORD_SPACE_ATTR_NO_DISCARD constexpr const ClientVector& getAxisPoint(typename Axis::Name axisName, typename Axis::PointIndex axisPointIndex) const noexcept;
+    constexpr auto& setAxisPoint(const ClientVector& endPoint, AxisName axisName, typename Axis::PointIndex axisPointIndex) noexcept;
+    MY_COORD_SPACE_ATTR_NO_DISCARD constexpr const ClientVector& getAxisPoint(AxisName axisName, typename Axis::PointIndex axisPointIndex) const noexcept;
 
-    constexpr auto& setAxisEnd(const ClientUnit endValue, typename Axis::Name axisName, typename Axis::PointIndex axisPointIndex) noexcept;
-    MY_COORD_SPACE_ATTR_NO_DISCARD constexpr ClientUnit getAxisEnd(typename Axis::Name axisName, typename Axis::PointIndex axisPointIndex) const noexcept;
+    constexpr auto& setAxisEnd(const ClientUnit endValue, AxisName axisName, typename Axis::PointIndex axisPointIndex, bool updatePoint) noexcept;
+    MY_COORD_SPACE_ATTR_NO_DISCARD constexpr ClientUnit getAxisEnd(AxisName axisName, typename Axis::PointIndex axisPointIndex) const noexcept;
 
     constexpr void recalculateTransformation() noexcept;
 
@@ -93,7 +93,9 @@ public:
     constexpr auto lineTo(Rasteriser r, ClientUnit x, ClientUnit y) const noexcept;
     constexpr auto line(Rasteriser r, ClientUnit fromX, ClientUnit fromY, ClientUnit toX, ClientUnit toY) const noexcept;
     constexpr auto setPixel(Rasteriser r, ClientUnit x, ClientUnit y, unsigned long colour) const noexcept;
-    constexpr auto ellipse(Rasteriser r, ClientUnit left, ClientUnit top, ClientUnit right, ClientUnit bottom) const noexcept;
+    constexpr auto ellipse(Rasteriser r, ClientUnit boundingLeft, ClientUnit boundingTop, ClientUnit boundingRight, ClientUnit boundingBottom) const noexcept;
+    constexpr auto arc(Rasteriser r, ClientUnit boundingLeft, ClientUnit boundingTop, ClientUnit boundingRight, ClientUnit boundingBottom, 
+        ClientUnit startX, ClientUnit startY, ClientUnit endX, ClientUnit endY) const noexcept;
 
     constexpr void draw(Rasteriser r) const noexcept;
 
@@ -113,32 +115,31 @@ private:
         return bb;
     }
 
-    [[nodiscard]] static constexpr auto mapAxisNameToIndex(typename Axis::Name axisName) noexcept {
-        assert((axisName >= 0) && (axisName < Space::kDimensions));
-        return static_cast<unsigned short>(axisName);
+    [[nodiscard]] static constexpr auto mapAxisNameToIndex(AxisName axisName) noexcept {
+        return std::to_underlying(axisName);
     }
 
     template<typename T, std::size_t N>
-    [[nodiscard]] static constexpr std::optional<T> getAttributesForAxis(const std::optional<std::array<std::optional<T>, N>>& optAttributes, typename Axis::Name axisName) noexcept {
+    [[nodiscard]] static constexpr std::optional<T> getAttributesForAxis(const std::optional<std::array<std::optional<T>, N>>& optAttributes, AxisName axisName) noexcept {
         return optAttributes.has_value() ? optAttributes->at(mapAxisNameToIndex(axisName)) : std::nullopt;
     }
 
-    [[nodiscard]] static constexpr std::array<ClientUnit, Axis::kAxisEndsNumber> computeAxisEnds(const BoundingBox& boundBox, typename Axis::Name axisName) noexcept {
+    [[nodiscard]] static constexpr std::array<ClientUnit, Axis::kAxisEndsNumber> computeAxisEnds(const BoundingBox& boundBox, AxisName axisName) noexcept {
         const auto axisIndex = mapAxisNameToIndex(axisName);
         return std::array{ boundBox.min[axisIndex], boundBox.max[axisIndex] };
     }
 
-    [[nodiscard]] static constexpr ClientUnit computeAxisOrigin(const ClientVector& origin, typename Axis::Name axisName) noexcept {
+    [[nodiscard]] static constexpr ClientUnit computeAxisOrigin(const ClientVector& origin, AxisName axisName) noexcept {
         const auto axisIndex = mapAxisNameToIndex(axisName);
 
         return origin[axisIndex];
     }
 
     [[nodiscard]] static constexpr std::array<ClientVector, Axis::kAxisEndsNumber> computeAxisEndPoints(const BoundingBox& boundBox,
-        const ClientVector& origin, typename Axis::Name axisName) noexcept {
+        const ClientVector& origin, AxisName axisName) noexcept {
 
         const auto axisIndex = mapAxisNameToIndex(axisName);
-        const auto axisStartPointIndex = std::to_underlying(Axis::PointIndex::Start), 
+        constexpr const auto axisStartPointIndex = std::to_underlying(Axis::PointIndex::Start), 
             axisEndPointIndex = std::to_underlying(Axis::PointIndex::End);
 
         const auto clampedOrigin = clampVector(origin, boundBox);

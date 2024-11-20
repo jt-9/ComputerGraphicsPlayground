@@ -236,6 +236,7 @@
     <ClInclude Include="..\..\src\ApeMath\Vector.h" />
     <ClInclude Include="..\..\src\CoordSpace\CartesianCoordSys2D-inl.h" />
     <ClInclude Include="..\..\src\CoordSpace\CartesianCoordSys2D.h" />
+    <ClInclude Include="..\..\src\CoordSpace\CartesianCoordSysAxisName.hpp" />
     <ClInclude Include="..\..\src\CoordSpace\CoordAxis2D-inl.h" />
     <ClInclude Include="..\..\src\CoordSpace\CoordAxis2D.h" />
     <ClInclude Include="..\..\src\CoordSpace\CoordSpace2D-inl.h" />

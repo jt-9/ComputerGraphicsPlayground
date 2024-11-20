@@ -94,7 +94,7 @@ MYMTL_INLINE constexpr CoordSpaceBasis2D<Unit>::CoordSpaceBasis2D(const mymtl::V
 
 
 template<typename Unit>
-MYMTL_INLINE constexpr CoordSpaceBasis2D<Unit>::CoordSpaceBasis2D(const std::array<mymtl::Vector2<Unit>, 3>& pts) noexcept
+MYMTL_INLINE constexpr CoordSpaceBasis2D<Unit>::CoordSpaceBasis2D(const typename CoordSpaceBasis2D<Unit>::Points& pts) noexcept
     :pts_{ pts } {}
 
 

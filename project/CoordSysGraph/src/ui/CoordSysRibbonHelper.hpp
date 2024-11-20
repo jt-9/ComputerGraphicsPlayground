@@ -18,4 +18,9 @@ public:
     virtual void onCommand(CMFCRibbonBar& ribbon, CMFCRibbonEdit& edit) noexcept = 0;
 };
 
+class IRibbonCtrlProvider {
+public:
+    virtual CMFCRibbonEdit& getRibbonEdit(UINT ctrlID) const noexcept = 0;
+};
+
 #endif // !COORD_SYS_UI_RIBBON

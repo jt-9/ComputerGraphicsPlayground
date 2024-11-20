@@ -81,6 +81,22 @@ struct WinGDIRasteriser {
 		return 0 != Ellipse(hdc_, left, top, right, bottom);
 	}
 
+	template<typename U>
+		requires std::convertible_to<U, int>
+	MYMTL_INLINE auto ellipse(const mymtl::Vector2<U>& upper_left, const mymtl::Vector2<U>& bottom_right) const noexcept {
+		return ellipse(upper_left.x, upper_left.y, bottom_right.x, bottom_right.y);
+	}
+
+	MYMTL_INLINE auto arc(int left, int top, int right, int bottom, int startX, int startY, int endX, int endY) const noexcept {
+		return 0 != Arc(hdc_, left, top, right, bottom, startX, startY, endX, endY);
+	}
+
+	template<typename U, typename V>
+		requires std::convertible_to<U, int> && std::convertible_to<V, int>
+	MYMTL_INLINE auto arc(const mymtl::Vector2<U>& upper_left, const mymtl::Vector2<U>& bottom_right, const mymtl::Vector2<V>& start, const mymtl::Vector2<V>& end) const noexcept {
+		return arc(upper_left.x, upper_left.y, bottom_right.x, bottom_right.y, start.x, start.y, end.x, end.y);
+	}
+
 	MYMTL_INLINE auto textOut(int x, int y, const char* str, std::uint16_t length) const noexcept {
 		return 0 != TextOutA(hdc_, x, y, str, length);
 	}
