@@ -150,10 +150,7 @@
     <ClInclude Include="..\..\src\ApeMath\Matrix-inl.h">
       <Filter>ApeMath</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\ApeMath\Rect.h">
-      <Filter>ApeMath</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\ApeMath\Rect-inl.h">
+    <ClInclude Include="..\..\src\ApeMath\Rect.hpp">
       <Filter>ApeMath</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\ApeMath\Vector.h">

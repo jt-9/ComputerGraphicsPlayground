@@ -230,8 +230,7 @@
     <ClInclude Include="..\..\src\ApeMath\Matrix-inl.h" />
     <ClInclude Include="..\..\src\ApeMath\Matrix.h" />
     <ClInclude Include="..\..\src\ApeMath\MTLConcepts.h" />
-    <ClInclude Include="..\..\src\ApeMath\Rect-inl.h" />
-    <ClInclude Include="..\..\src\ApeMath\Rect.h" />
+    <ClInclude Include="..\..\src\ApeMath\Rect.hpp" />
     <ClInclude Include="..\..\src\ApeMath\Vector-inl.h" />
     <ClInclude Include="..\..\src\ApeMath\Vector.h" />
     <ClInclude Include="..\..\src\CoordSpace\CartesianCoordSys2D-inl.h" />
