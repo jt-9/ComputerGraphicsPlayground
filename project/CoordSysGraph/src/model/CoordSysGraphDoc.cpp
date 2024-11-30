@@ -39,7 +39,7 @@ END_MESSAGE_MAP()
 // CCoordSysGraphDoc construction/destruction
 
 CCoordSysGraphDoc::CCoordSysGraphDoc() noexcept
-    : spaceBoundRect_{ .min{-1, -1}, .max{1, 1} }
+    : clientBoundRect_{ .left = 0, .top = 0, .right = 1, .bottom = 1 }
 {
 }
 
@@ -54,7 +54,7 @@ BOOL CCoordSysGraphDoc::OnNewDocument()
 
     // (SDI documents will reuse this document)
     
-    spaceBoundRect_ = { .min{-1, -1}, .max{1, 1} };
+    setBoundRect(0, 0, 1, 1);
 
     return TRUE;
 }

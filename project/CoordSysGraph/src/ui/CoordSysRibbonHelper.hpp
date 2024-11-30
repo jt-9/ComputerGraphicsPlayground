@@ -6,10 +6,10 @@
 #include <afxribbonedit.h>
 
 struct CoordSys2DRibbonEditControls {
-    CMFCRibbonEdit* editXmin_;
-    CMFCRibbonEdit* editYmin_;
-    CMFCRibbonEdit* editXmax_;
-    CMFCRibbonEdit* editYmax_;
+    CMFCRibbonEdit* editLeftBound_;
+    CMFCRibbonEdit* editTopBound_;
+    CMFCRibbonEdit* editRightBound_;
+    CMFCRibbonEdit* editBottomBound_;
 };
 
 

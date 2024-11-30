@@ -18,6 +18,9 @@
 #include "windows_gdi_deleter.hpp"
 #include "unique_rc.hpp"
 #include "CoordSysRibbonHelper.hpp"
+#include "CoordSysGraphDoc.h"
+
+#include <string_view>
 
 class CCoordSysGraphView : public CScrollView, public IRibbonEditCtrlOnCommand
 {
@@ -40,6 +43,7 @@ public:
 
 protected:
     void OnInitialUpdate() override; // called first time after construct
+    void OnUpdate(CView* /*pSender*/, LPARAM /*lHint*/, CObject* /*pHint*/) override;
 
     // Implementation
 public:
@@ -54,6 +58,7 @@ private:
     raii::unique_rc<HPEN, raii::gdi_delete_object_nullptr<HPEN>> tickPen_;
     //coordsys::LabelFormatter<CoordSys2D::ClientUnit> labelFormatter_;
     CoordSys2D coord2D_;
+    coordsys::LabelFormatter<CoordSys2D::ClientUnit> coordBoundingValueFormatter_;
 
     // Generated message map functions
 protected:
@@ -65,12 +70,13 @@ protected:
     DECLARE_MESSAGE_MAP()
 
 private:
-    void setBoundingValueToEditField(CMFCRibbonEdit& edit) const noexcept;
+    void setValueToEditField(CMFCRibbonEdit& edit, ClientRect::value_type value) const noexcept;
     void setupRibbonCtrls(const IRibbonCtrlProvider& provider) const noexcept;
     void drawScene(HDC paintDC) noexcept;
     void invalidateScene(RECT clientRect) noexcept;
+
 public:
-//    afx_msg void OnEditCoordXmin();
+    static inline constexpr auto kNumberDefaultFormat = std::string_view{ "{:g}" };
 };
 
 #ifndef _DEBUG  // debug version in CoordSysGraphView.cpp

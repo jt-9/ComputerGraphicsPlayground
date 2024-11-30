@@ -34,16 +34,16 @@ BEGIN_MESSAGE_MAP(CMainFrame, CFrameWndEx)
     ON_COMMAND_RANGE(ID_VIEW_APPLOOK_WIN_2000, ID_VIEW_APPLOOK_WINDOWS_7, &CMainFrame::OnApplicationLook)
     ON_UPDATE_COMMAND_UI_RANGE(ID_VIEW_APPLOOK_WIN_2000, ID_VIEW_APPLOOK_WINDOWS_7, &CMainFrame::OnUpdateApplicationLook)
     ON_WM_SETTINGCHANGE()
-    ON_COMMAND(ID_EDIT_COORD_XMIN, &CMainFrame::OnEditCoordXmin)
-    ON_COMMAND(ID_EDIT_COORD_YMIN, &CMainFrame::OnEditCoordYmin)
-    ON_COMMAND(ID_EDIT_COORD_XMAX, &CMainFrame::OnEditCoordXmax)
-    ON_COMMAND(ID_EDIT_COORD_YMAX, &CMainFrame::OnEditCoordYmax)
+    ON_COMMAND(ID_EDIT_COORD_LEFT, &CMainFrame::OnEditCoordXmin)
+    ON_COMMAND(ID_EDIT_COORD_TOP, &CMainFrame::OnEditCoordYmin)
+    ON_COMMAND(ID_EDIT_COORD_RIGHT, &CMainFrame::OnEditCoordXmax)
+    ON_COMMAND(ID_EDIT_COORD_BOTTOM, &CMainFrame::OnEditCoordYmax)
 END_MESSAGE_MAP()
 
 // CMainFrame construction/destruction
 
 CMainFrame::CMainFrame() noexcept
-    : m_ctrlRibbonEdit{ .editXmin_ = nullptr, .editYmin_ = nullptr, .editXmax_ = nullptr, .editYmax_ = nullptr }
+    : m_ctrlRibbonEdit{ .editLeftBound_ = nullptr, .editTopBound_ = nullptr, .editRightBound_ = nullptr, .editBottomBound_ = nullptr }
 {
     // TODO: add member initialization code here
     theApp.m_nAppLook = theApp.GetInt(_T("ApplicationLook"), ID_VIEW_APPLOOK_WINDOWS_7);
@@ -137,10 +137,10 @@ void CMainFrame::SetDockingWindowIcons(BOOL bHiColorIcons) noexcept
 CoordSys2DRibbonEditControls CMainFrame::initRibbonEditControls() const noexcept
 {
     return CoordSys2DRibbonEditControls{
-        .editXmin_ = static_cast<CMFCRibbonEdit*>(m_wndRibbonBar.FindByID(ID_EDIT_COORD_XMIN)),
-        .editYmin_ = static_cast<CMFCRibbonEdit*>(m_wndRibbonBar.FindByID(ID_EDIT_COORD_YMIN)),
-        .editXmax_ = static_cast<CMFCRibbonEdit*>(m_wndRibbonBar.FindByID(ID_EDIT_COORD_XMAX)),
-        .editYmax_ = static_cast<CMFCRibbonEdit*>(m_wndRibbonBar.FindByID(ID_EDIT_COORD_YMAX))
+        .editLeftBound_ = static_cast<CMFCRibbonEdit*>(m_wndRibbonBar.FindByID(ID_EDIT_COORD_LEFT)),
+        .editTopBound_ = static_cast<CMFCRibbonEdit*>(m_wndRibbonBar.FindByID(ID_EDIT_COORD_TOP)),
+        .editRightBound_ = static_cast<CMFCRibbonEdit*>(m_wndRibbonBar.FindByID(ID_EDIT_COORD_RIGHT)),
+        .editBottomBound_ = static_cast<CMFCRibbonEdit*>(m_wndRibbonBar.FindByID(ID_EDIT_COORD_BOTTOM))
     };
 }
 
@@ -255,42 +255,42 @@ void CMainFrame::OnSettingChange(UINT uFlags, LPCTSTR lpszSection)
 void CMainFrame::OnEditCoordXmin()
 {
     IRibbonEditCtrlOnCommand* view = dynamic_cast<IRibbonEditCtrlOnCommand*>(GetActiveView());
-    view->onCommand(m_wndRibbonBar, *m_ctrlRibbonEdit.editXmin_);
+    view->onCommand(m_wndRibbonBar, *m_ctrlRibbonEdit.editLeftBound_);
 }
 
 void CMainFrame::OnEditCoordYmin()
 {
     IRibbonEditCtrlOnCommand* view = dynamic_cast<IRibbonEditCtrlOnCommand*>(GetActiveView());
-    view->onCommand(m_wndRibbonBar, *m_ctrlRibbonEdit.editYmin_);
+    view->onCommand(m_wndRibbonBar, *m_ctrlRibbonEdit.editTopBound_);
 }
 
 
 void CMainFrame::OnEditCoordXmax()
 {
     IRibbonEditCtrlOnCommand* view = dynamic_cast<IRibbonEditCtrlOnCommand*>(GetActiveView());
-    view->onCommand(m_wndRibbonBar, *m_ctrlRibbonEdit.editXmax_);
+    view->onCommand(m_wndRibbonBar, *m_ctrlRibbonEdit.editRightBound_);
 }
 
 
 void CMainFrame::OnEditCoordYmax()
 {
     IRibbonEditCtrlOnCommand* view = dynamic_cast<IRibbonEditCtrlOnCommand*>(GetActiveView());
-    view->onCommand(m_wndRibbonBar, *m_ctrlRibbonEdit.editYmax_);
+    view->onCommand(m_wndRibbonBar, *m_ctrlRibbonEdit.editBottomBound_);
 }
 
 CMFCRibbonEdit& CMainFrame::getRibbonEdit(UINT ctrlID) const noexcept
 {
     switch (ctrlID) {
-    case ID_EDIT_COORD_XMIN:
-        return *m_ctrlRibbonEdit.editXmin_;
-    case ID_EDIT_COORD_YMIN:
-        return *m_ctrlRibbonEdit.editYmin_;
-    case ID_EDIT_COORD_XMAX:
-        return *m_ctrlRibbonEdit.editXmax_;
-    case ID_EDIT_COORD_YMAX:
-        return *m_ctrlRibbonEdit.editYmax_;
+    case ID_EDIT_COORD_LEFT:
+        return *m_ctrlRibbonEdit.editLeftBound_;
+    case ID_EDIT_COORD_TOP:
+        return *m_ctrlRibbonEdit.editTopBound_;
+    case ID_EDIT_COORD_RIGHT:
+        return *m_ctrlRibbonEdit.editRightBound_;
+    case ID_EDIT_COORD_BOTTOM:
+        return *m_ctrlRibbonEdit.editBottomBound_;
 
     default:
-        throw std::exception("Invalid ctrl id");
+        std::abort();
     }
 }

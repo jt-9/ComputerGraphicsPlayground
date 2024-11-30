@@ -19,15 +19,6 @@
 MY_COORD_SPACE_BEGIN
 
 
-//#ifdef  UNICODE
-//using gstring = std::string;
-//const gstring constStrFormat{ "%.2f" };
-//#else
-//using gstring = std::string;
-//const gstring constStrFormat{ "%.2f" };
-//#endif
-
-
 const unsigned char constMaxBufLength = 32;
 
 constexpr mymtl::gfloat minLabelDist = 1000 * mymtl::kEps;
@@ -178,11 +169,18 @@ public:
 
     constexpr void setEndPoint(const ClientVector& endPoint, PointIndex axisPointIndex) noexcept;
     MYMTL_NO_DISCARD constexpr const ClientVector& getEndPoint(PointIndex axisPointIndex) const noexcept;
+
+    constexpr void setEndPoints(const std::array<ClientVector, kAxisEndsNumber>& endPoints) noexcept;
     MYMTL_NO_DISCARD constexpr const auto& getEndPoints() const noexcept;
     
     constexpr void setEndValue(ClientUnit endValue, PointIndex axisPointIndex) noexcept;
     MYMTL_NO_DISCARD constexpr ClientUnit getEndValue(PointIndex axisPointIndex) const noexcept;
+
+    constexpr void setEndValues(const std::array<ClientUnit, kAxisEndsNumber>& endValues) noexcept;
     MYMTL_NO_DISCARD constexpr const auto& getEndValues() const noexcept;
+
+    constexpr void setOrigin(ClientUnit origin) noexcept;
+    MYMTL_NO_DISCARD constexpr ClientUnit getOrigin() const noexcept;
 
     //void setAxisName( const gstring& newName );
     //const gstring& axisName() const;

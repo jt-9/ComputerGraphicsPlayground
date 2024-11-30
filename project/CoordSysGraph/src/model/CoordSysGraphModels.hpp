@@ -7,5 +7,6 @@
 #include "LabelFormatter.hpp"
     
 using CoordSys2D = coordsys::CartesianCoordSys2D<int, float, double, coordsys::LabelFormatter<float>>;
+using ClientRect = mymtl::Rect2<CoordSys2D::ClientUnit>;
 
 #endif

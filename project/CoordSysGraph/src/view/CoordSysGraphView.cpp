@@ -31,31 +31,24 @@
 #include "ApeMath.h"
 #include "MemoryDC.hpp"
 
-#include <string_view>
-
 namespace {
     template<typename Unit>
     inline constexpr auto computePadding(Unit length, Unit desiredindent) noexcept {
         return (length > (desiredindent + desiredindent)) ? desiredindent : static_cast<Unit>(0);
     }
 
-    using namespace std::literals;
-    constexpr auto coordLabelFormat = "{:g}"sv;
-
     inline constexpr const auto kConvertBufferSize = 64;
 
-    inline constexpr auto axisNameAndIndexForEdit(UINT id) noexcept {
-        using coordsys::AxisName;
-
-        switch (id) {
-        case ID_EDIT_COORD_XMIN:
-            return std::make_pair(AxisName::Abscissa, CoordSys2D::Axis::PointIndex::Start);
-        case ID_EDIT_COORD_YMIN:
-            return std::make_pair(AxisName::Ordinate, CoordSys2D::Axis::PointIndex::Start);
-        case ID_EDIT_COORD_XMAX:
-            return std::make_pair(AxisName::Abscissa, CoordSys2D::Axis::PointIndex::End);
-        case ID_EDIT_COORD_YMAX:
-            return std::make_pair(AxisName::Ordinate, CoordSys2D::Axis::PointIndex::End);
+    inline constexpr auto getBoundingValue(UINT editId, const ClientRect& boundingRect) noexcept {
+        switch (editId) {
+        case ID_EDIT_COORD_LEFT:
+            return boundingRect.left;
+        case ID_EDIT_COORD_TOP:
+            return boundingRect.top;
+        case ID_EDIT_COORD_RIGHT:
+            return boundingRect.right;
+        case ID_EDIT_COORD_BOTTOM:
+            return boundingRect.bottom;
 
         default:
         {
@@ -65,31 +58,31 @@ namespace {
         }
     }
 
-    // Space maps top left, bottom left, and bottom right points
-    inline constexpr typename CoordSys2D::Space::ClientSpace updateClientSpace(const typename CoordSys2D::Space::ClientSpace& oldSpace, CoordSys2D::ClientUnit value, coordsys::AxisName axisName, typename CoordSys2D::Axis::PointIndex axisPointIndex) noexcept {
-        using coordsys::AxisName;
-
-        CoordSys2D::Space::ClientSpace newSpace{ oldSpace.pts_ };
-
-        if (CoordSys2D::Axis::PointIndex::Start == axisPointIndex) {
-            // Xmin or Ymin
-            if (AxisName::Abscissa == axisName) {
-                newSpace.pt1().x = newSpace.pt2().x = value;
-            }
-            else if (AxisName::Ordinate == axisName) {
-                newSpace.pt2().y = newSpace.pt3().y = value;
-            }
-        }
-        else {
-            if (AxisName::Abscissa == axisName) {
-                newSpace.pt3().x = value;
-            }
-            else if (AxisName::Ordinate == axisName) {
-                newSpace.pt1().y = value;
-            }
+    inline constexpr auto& updateBoundingRect(ClientRect& boundingRect, UINT editId, ClientRect::value_type value) noexcept {
+        switch (editId) {
+        case ID_EDIT_COORD_LEFT:
+            boundingRect.left = value;
+            break;
+        case ID_EDIT_COORD_TOP:
+            boundingRect.top = value;
+            break;
+        case ID_EDIT_COORD_RIGHT:
+            boundingRect.right = value;
+            break;
+        case ID_EDIT_COORD_BOTTOM:
+            boundingRect.bottom = value;
+            break;
         }
 
-        return newSpace;
+        return boundingRect;
+    }
+
+    inline constexpr typename CoordSys2D::Space::ClientSpace fromBoundingRect(const ClientRect& boundingRect) noexcept {
+        return { {boundingRect.left, boundingRect.top}, {boundingRect.left, boundingRect.bottom}, {boundingRect.right, boundingRect.bottom} };
+    }
+
+    inline constexpr typename CoordSys2D::Space::ScreenSpace fromScreenPoints(int left, int top, int right, int bottom) noexcept {
+        return { {left, top}, {left, bottom}, {right, bottom} };
     }
 }
 
@@ -109,7 +102,7 @@ END_MESSAGE_MAP()
 
 CCoordSysGraphView::CCoordSysGraphView() noexcept
     : tickBrush_{ static_cast<HBRUSH>(GetStockObject(BLACK_BRUSH)) }, tickPen_{ /*static_cast<HPEN>(CreatePen(PS_SOLID, 1, RGB(0, 160, 0)))*/ },
-    coord2D_{ CoordSys2D::Space::ClientSpace{{-1, 1}, {-1, -1}, {1, -1}},
+    coord2D_{ CoordSys2D::Space::ClientSpace{{0, 0}, {0, 1}, {1, 1}},
         mymtl::identity_matrix<CoordSys2D::TransfUnit, CoordSys2D::Space::kDimensions + 1>(), {},
         std::optional{std::array{
             std::optional{ typename CoordSys2D::AxisAttributes{.pen = tickPen_.get()} },
@@ -120,10 +113,10 @@ CCoordSysGraphView::CCoordSysGraphView() noexcept
             std::optional{ typename CoordSys2D::TickAttributes{0.1F, 5, 5, tickPen_.get(), tickBrush_.get()} }
         }},
         std::optional{std::array{
-            std::optional{ typename CoordSys2D::LabelAttributes{0.1F, coordsys::LabelFormatter<CoordSys2D::ClientUnit>{coordLabelFormat}, CoordSys2D::ScreenVector{0, 12}, (TA_TOP | TA_NOUPDATECP | TA_CENTER), nullptr, 0, 0} },
-            std::optional{ typename CoordSys2D::LabelAttributes{0.1F, coordsys::LabelFormatter<CoordSys2D::ClientUnit>{coordLabelFormat}, CoordSys2D::ScreenVector{8, -16}, (TA_TOP | TA_NOUPDATECP | TA_CENTER), nullptr, 0, 0.1F} }
+            std::optional{ typename CoordSys2D::LabelAttributes{0.1F, coordsys::LabelFormatter<CoordSys2D::ClientUnit>{kNumberDefaultFormat}, CoordSys2D::ScreenVector{0, 12}, (TA_TOP | TA_NOUPDATECP | TA_CENTER), nullptr, 0, 0} },
+            std::optional{ typename CoordSys2D::LabelAttributes{0.1F, coordsys::LabelFormatter<CoordSys2D::ClientUnit>{kNumberDefaultFormat}, CoordSys2D::ScreenVector{8, -16}, (TA_TOP | TA_NOUPDATECP | TA_CENTER), nullptr, 0, 0.1F} }
         }}
-    }
+    }, coordBoundingValueFormatter_{ kNumberDefaultFormat }
 {
     // TODO: add construction code here
 }
@@ -162,15 +155,31 @@ void CCoordSysGraphView::OnDraw(CDC* pDC)
 }
 
 void CCoordSysGraphView::OnInitialUpdate() {
+    auto* ribbonProvider = static_cast<IRibbonCtrlProvider*>(static_cast<CMainFrame*>(GetParentFrame()));
+    setupRibbonCtrls(*ribbonProvider);
+
     CScrollView::OnInitialUpdate();
 
     CSize sizeTotal;
     // TODO: calculate the total size of this view
     sizeTotal.cx = sizeTotal.cy = 100;
     SetScrollSizes(MM_TEXT, sizeTotal);
+}
 
-    auto* ribbonProvider = static_cast<IRibbonCtrlProvider*>(static_cast<CMainFrame*>(GetParentFrame()));
-    setupRibbonCtrls(*ribbonProvider);
+void CCoordSysGraphView::OnUpdate(CView* /*pSender*/, LPARAM lHint, CObject* /*pHint*/)
+{
+    auto* document = GetDocument();
+    const ClientRect boundingRect{ document->getBoundRect() };
+
+    const CoordSys2D::Space::ClientSpace clientSpace{ fromBoundingRect(boundingRect) };
+    const CoordSys2D::BoundingBox boundingBox = CoordSys2D::fromClientSpace(clientSpace);
+
+    coord2D_.setClientSpace(clientSpace, true)
+        .setAxesEnds(boundingBox, true);
+
+    if (lHint) {
+        Invalidate(FALSE);
+    }
 }
 
 void CCoordSysGraphView::OnRButtonUp(UINT /* nFlags */, CPoint point) noexcept {
@@ -224,50 +233,51 @@ BOOL CCoordSysGraphView::OnEraseBkgnd(CDC*) noexcept {
 void CCoordSysGraphView::onCommand(CMFCRibbonBar& /*ribbon*/, CMFCRibbonEdit& edit) noexcept
 {
     const CString inputEditTextCopy = edit.GetEditText();
+    ClientRect boundingRect{ GetDocument()->getBoundRect() };
 
     if (inputEditTextCopy.IsEmpty()) {
-        setBoundingValueToEditField(edit);
-
-        return;
-    }
-
-    // Edit text is not empty, so parse it
-    const std::string rawInput{ CT2AEX<kConvertBufferSize>{inputEditTextCopy.GetString()} };
-
-    CoordSys2D::ClientUnit axisEndValue{};
-    const auto* const ptrToLast = rawInput.data() + rawInput.size();
-    const auto [ptr, parseError] = std::from_chars(rawInput.data(), ptrToLast, axisEndValue);
-
-    // If success set into field and redraw
-    if ((parseError == std::errc{}) && (ptrToLast == ptr)) {
-        auto [axisName, axisPointIndex] = axisNameAndIndexForEdit(edit.GetID());
-        coord2D_.setAxisEnd(axisEndValue, axisName, axisPointIndex, true);
-        
-        coord2D_.setClientSpace(updateClientSpace(coord2D_.getClientSpace(), axisEndValue, axisName, axisPointIndex), true);
-
-        Invalidate(FALSE);
+        setValueToEditField(edit, getBoundingValue(edit.GetID(), boundingRect));
     }
     else {
-        TRACE1("Edit text error parse %d\n", parseError);
-        setBoundingValueToEditField(edit);
+        // Edit text is not empty, so parse it
+        const std::string rawInput{ CT2AEX<kConvertBufferSize>{inputEditTextCopy.GetString()} };
+
+        CoordSys2D::ClientUnit newBoundingValue{};
+        const auto* const ptrToLast = rawInput.data() + rawInput.size();
+        const auto [ptr, parseError] = std::from_chars(rawInput.data(), ptrToLast, newBoundingValue);
+
+        // If success set into field and redraw
+        if ((parseError == std::errc{}) && (ptrToLast == ptr)) {
+            const auto existingBoundingValue = getBoundingValue(edit.GetID(), boundingRect);
+
+            if (existingBoundingValue != newBoundingValue) {
+                auto* document = GetDocument();
+                document->setBoundRect(updateBoundingRect(boundingRect, edit.GetID(), newBoundingValue));
+                document->SetModifiedFlag();
+                document->UpdateAllViews(nullptr, 1);
+                document->SetModifiedFlag(FALSE);
+            }
+        }
+        else {
+            TRACE1("Edit text error parse %d\n", parseError);
+            setValueToEditField(edit, getBoundingValue(edit.GetID(), boundingRect));
+        }
     }
 }
 
-void CCoordSysGraphView::setBoundingValueToEditField(CMFCRibbonEdit& edit) const noexcept {
-    const coordsys::LabelFormatter<CoordSys2D::ClientUnit> formatter{ coordLabelFormat };
-
-    auto [axisName, pointIndex] = axisNameAndIndexForEdit(edit.GetID());
-    const auto formattedValue = formatter(coord2D_.getAxisEnd(axisName, pointIndex));
-    
+void CCoordSysGraphView::setValueToEditField(CMFCRibbonEdit& edit, ClientRect::value_type value) const noexcept {
+    const auto formattedValue = coordBoundingValueFormatter_(value);
     edit.SetEditText(CString{ CA2TEX<kConvertBufferSize>{formattedValue.data()} });
 }
 
 void CCoordSysGraphView::setupRibbonCtrls(const IRibbonCtrlProvider& provider) const noexcept
 {
-    setBoundingValueToEditField(provider.getRibbonEdit(ID_EDIT_COORD_XMIN));
-    setBoundingValueToEditField(provider.getRibbonEdit(ID_EDIT_COORD_YMIN));
-    setBoundingValueToEditField(provider.getRibbonEdit(ID_EDIT_COORD_XMAX));
-    setBoundingValueToEditField(provider.getRibbonEdit(ID_EDIT_COORD_YMAX));
+    const ClientRect boundingRect{ GetDocument()->getBoundRect() };
+
+    setValueToEditField(provider.getRibbonEdit(ID_EDIT_COORD_LEFT), boundingRect.left);
+    setValueToEditField(provider.getRibbonEdit(ID_EDIT_COORD_TOP), boundingRect.top);
+    setValueToEditField(provider.getRibbonEdit(ID_EDIT_COORD_RIGHT), boundingRect.right);
+    setValueToEditField(provider.getRibbonEdit(ID_EDIT_COORD_BOTTOM), boundingRect.bottom);
 }
 
 void CCoordSysGraphView::invalidateScene(RECT clientRect) noexcept {
@@ -276,8 +286,7 @@ void CCoordSysGraphView::invalidateScene(RECT clientRect) noexcept {
     const auto indentX = computePadding(cx, 20);
     const auto indentY = computePadding(cy, 20);
 
-    coord2D_.setScreenSpace(CoordSys2D::Space::ScreenSpace{ {clientRect.left + indentX, clientRect.top + indentY},
-        {clientRect.left + indentX, clientRect.top + cy - indentY}, {clientRect.left + cx - indentX, clientRect.top + cy - indentY} }, true);
+    coord2D_.setScreenSpace(fromScreenPoints(clientRect.left + indentX, clientRect.top + indentY, clientRect.left + cx - indentX, clientRect.top + cy - indentY), true);
 
     InvalidateRect(&clientRect, FALSE);
 }
