@@ -4,6 +4,7 @@
 #include <cassert>
 #include <cmath>
 #include <algorithm>
+#include "CartesianCoordSys2D.h"
 
 MY_COORD_SPACE_BEGIN
 
@@ -30,17 +31,17 @@ MYMTL_INLINE constexpr CartesianCoordSys2D<SU, CU, TU, Formatter>::CartesianCoor
 
 template<typename SU, typename CU, typename TU, typename Formatter>
 MYMTL_INLINE constexpr CartesianCoordSys2D<SU, CU, TU, Formatter>::CartesianCoordSys2D(const Space::ClientSpace& clientSpace, const Space::ScreenSpace& screenSpace,
-    const BoundingBox& boundBox, const ClientVector& origin,
+    const BoundingBox& boundingBox, const ClientVector& origin,
     const std::optional<std::array<std::optional<AxisAttributes>, Space::kDimensions>>& aa,
     const std::optional<std::array<std::optional<TickAttributes>, Space::kDimensions>>& ta,
     const std::optional<std::array<std::optional<LabelAttributes>, Space::kDimensions>>& la) noexcept
     : space_{ clientSpace, screenSpace }, axes_{
         Axis{
-            computeAxisEndPoints(boundBox, origin, Axis::Abscissa), computeAxisEnds(boundBox, Axis::Abscissa), computeAxisOrigin(origin, Axis::Abscissa), 
+            computeAxisEndPoints(boundingBox, origin, Axis::Abscissa), computeAxisEnds(boundingBox, Axis::Abscissa), computeAxisOrigin(origin, Axis::Abscissa), 
             getAttributesForAxis(aa, Axis::Abscissa), getAttributesForAxis(ta, Axis::Abscissa), getAttributesForAxis(la, Axis::Abscissa)
         },
         Axis{
-            computeAxisEndPoints(boundBox, origin, Axis::Ordinate), computeAxisEnds(boundBox, Axis::Ordinate), computeAxisOrigin(origin, Axis::Ordinate), 
+            computeAxisEndPoints(boundingBox, origin, Axis::Ordinate), computeAxisEnds(boundingBox, Axis::Ordinate), computeAxisOrigin(origin, Axis::Ordinate), 
             getAttributesForAxis(aa, Axis::Ordinate), getAttributesForAxis(ta, Axis::Ordinate), getAttributesForAxis(la, Axis::Ordinate)
         }
     }
@@ -50,17 +51,17 @@ MYMTL_INLINE constexpr CartesianCoordSys2D<SU, CU, TU, Formatter>::CartesianCoor
 
 template<typename SU, typename CU, typename TU, typename Formatter>
 MYMTL_INLINE constexpr CartesianCoordSys2D<SU, CU, TU, Formatter>::CartesianCoordSys2D(const Space::ClientSpace& clientSpace, const Space::TransformationMatrix& m,
-    const BoundingBox& boundBox, const ClientVector& origin,
+    const BoundingBox& boundingBox, const ClientVector& origin,
     const std::optional<std::array<std::optional<AxisAttributes>, Space::kDimensions>>& aa,
     const std::optional<std::array<std::optional<TickAttributes>, Space::kDimensions>>& ta,
     const std::optional<std::array<std::optional<LabelAttributes>, Space::kDimensions>>& la) noexcept
     : space_{ clientSpace, m }, axes_{
         Axis{
-            computeAxisEndPoints(boundBox, origin, coordsys::AxisName::Abscissa), computeAxisEnds(boundBox, coordsys::AxisName::Abscissa), computeAxisOrigin(origin, coordsys::AxisName::Abscissa),
+            computeAxisEndPoints(boundingBox, origin, coordsys::AxisName::Abscissa), computeAxisEnds(boundingBox, coordsys::AxisName::Abscissa), computeAxisOrigin(origin, coordsys::AxisName::Abscissa),
             getAttributesForAxis(aa, coordsys::AxisName::Abscissa), getAttributesForAxis(ta, coordsys::AxisName::Abscissa), getAttributesForAxis(la, coordsys::AxisName::Abscissa)
         },
         Axis{
-            computeAxisEndPoints(boundBox, origin, coordsys::AxisName::Ordinate), computeAxisEnds(boundBox, coordsys::AxisName::Ordinate), computeAxisOrigin(origin, coordsys::AxisName::Ordinate),
+            computeAxisEndPoints(boundingBox, origin, coordsys::AxisName::Ordinate), computeAxisEnds(boundingBox, coordsys::AxisName::Ordinate), computeAxisOrigin(origin, coordsys::AxisName::Ordinate),
             getAttributesForAxis(aa, coordsys::AxisName::Ordinate), getAttributesForAxis(ta, coordsys::AxisName::Ordinate), getAttributesForAxis(la, coordsys::AxisName::Ordinate)
         }
     }
@@ -95,7 +96,7 @@ MYMTL_INLINE constexpr const typename CartesianCoordSys2D<SU, CU, TU, Formatter>
 template<typename SU, typename CU, typename TU, typename Formatter>
 MYMTL_INLINE constexpr auto& CartesianCoordSys2D<SU, CU, TU, Formatter>::setOrigin(const ClientVector& origin) noexcept {
     for (std::size_t i = 0; i < axes_.size(); i++) {
-        axes_[i].origin_ = origin[i];
+        axes_[i].setOrigin(origin[i]);
     }
 
     return *this;
@@ -106,7 +107,7 @@ MYMTL_INLINE constexpr typename CartesianCoordSys2D<SU, CU, TU, Formatter>::Clie
     ClientVector origin;
 
     for (std::size_t i = 0; i < axes_.size(); i++) {
-        origin[i] = axes_[i].origin_;
+        origin[i] = axes_[i].getOrigin();
     }
 
     return origin;
@@ -129,6 +130,19 @@ MYMTL_INLINE constexpr auto& CartesianCoordSys2D<SU, CU, TU, Formatter>::setAxis
 template<typename SU, typename CU, typename TU, typename Formatter>
 MYMTL_INLINE constexpr typename CartesianCoordSys2D<SU, CU, TU, Formatter>::ClientUnit CartesianCoordSys2D<SU, CU, TU, Formatter>::getAxisEnd(AxisName axisName, typename Axis::PointIndex axisPointIndex) const noexcept {
     return axes_[mapAxisNameToIndex(axisName)].getEndValue(axisPointIndex);
+}
+
+template<typename SU, typename CU, typename TU, typename Formatter>
+MYMTL_INLINE constexpr auto& CartesianCoordSys2D<SU, CU, TU, Formatter>::setAxesEnds(const BoundingBox& boundingBox, bool updateEndPoints) noexcept
+{
+    for (std::underlying_type_t<AxisName> i = 0; i < axes_.size(); i++) {
+        axes_[i].setEndValues(computeAxisEnds(boundingBox, i));
+        if (updateEndPoints) {
+            axes_[i].setEndPoints(computeAxisEndPoints(boundingBox, getOrigin(), i));
+        }
+    }
+
+    return *this;
 }
 
 template<typename SU, typename CU, typename TU, typename Formatter>

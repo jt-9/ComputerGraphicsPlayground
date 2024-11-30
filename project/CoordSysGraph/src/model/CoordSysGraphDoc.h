@@ -16,6 +16,7 @@
 #pragma once
 
 #include "CoordSysGraphModels.hpp"
+#include <cassert>
 
 class CCoordSysGraphDoc : public CDocument
 {
@@ -57,10 +58,23 @@ protected:
     void SetSearchContent(const CString& value);
 #endif // SHARED_HANDLERS
 private:
-    CoordSys2D::BoundingBox spaceBoundRect_;
+    ClientRect clientBoundRect_;
 
 public:
-    constexpr const CoordSys2D::BoundingBox& getBoundRect() const noexcept {
-        return spaceBoundRect_;
+    inline constexpr const ClientRect& getBoundRect() const noexcept {
+        return clientBoundRect_;
+    }
+
+    inline constexpr void setBoundRect(const ClientRect& boundRect) noexcept {
+        assert(boundRect.width() > 0 && boundRect.height() > 0 && "ClientRect cannot be degenerate");
+        clientBoundRect_ = boundRect;
+    }
+
+    inline constexpr void setBoundRect(ClientRect::value_type left, ClientRect::value_type top, ClientRect::value_type right, ClientRect::value_type bottom) noexcept {
+        assert((left != right) && (top != bottom) && "ClientRect cannot be degenerate");
+        clientBoundRect_.left = left;
+        clientBoundRect_.top = top;
+        clientBoundRect_.right = right;
+        clientBoundRect_.bottom = bottom;
     }
 };
