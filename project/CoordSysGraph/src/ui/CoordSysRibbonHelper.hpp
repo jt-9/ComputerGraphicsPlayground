@@ -10,12 +10,15 @@ struct CoordSys2DRibbonEditControls {
     CMFCRibbonEdit* editTopBound_;
     CMFCRibbonEdit* editRightBound_;
     CMFCRibbonEdit* editBottomBound_;
+    CMFCRibbonButton* btnSwapHorizontalBounds_;
+    CMFCRibbonButton* btnSwapVerticalBounds_;
 };
 
 
 class IRibbonEditCtrlOnCommand {
 public:
     virtual void onCommand(CMFCRibbonBar& ribbon, CMFCRibbonEdit& edit) noexcept = 0;
+    virtual void onCommand(CMFCRibbonBar& ribbon, CMFCRibbonButton& button) noexcept = 0;
 };
 
 class IRibbonCtrlProvider {

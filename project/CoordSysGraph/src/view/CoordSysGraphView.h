@@ -31,7 +31,7 @@ protected: // create from serialization only
     // Attributes
 public:
     CCoordSysGraphDoc* GetDocument() const noexcept;
-
+    IRibbonCtrlProvider* GetRibbonCtrlProvider() const noexcept;
     // Operations
 public:
 
@@ -40,6 +40,7 @@ public:
     void OnDraw(CDC* pDC) override;  // overridden to draw this view
     BOOL PreCreateWindow(CREATESTRUCT& cs) override;
     void onCommand(CMFCRibbonBar& ribbon, CMFCRibbonEdit& edit) noexcept override;
+    void onCommand(CMFCRibbonBar& ribbon, CMFCRibbonButton& button) noexcept override;
 
 protected:
     void OnInitialUpdate() override; // called first time after construct
@@ -72,6 +73,7 @@ protected:
 private:
     void setValueToEditField(CMFCRibbonEdit& edit, ClientRect::value_type value) const noexcept;
     void setupRibbonCtrls(const IRibbonCtrlProvider& provider) const noexcept;
+    void updateRibbonBoundEditCtrls(const IRibbonCtrlProvider& provider, const ClientRect& boundingRect) const noexcept;
     void drawScene(HDC paintDC) noexcept;
     void invalidateScene(RECT clientRect) noexcept;
 
@@ -84,5 +86,8 @@ inline CCoordSysGraphDoc* CCoordSysGraphView::GetDocument() const noexcept
 {
     return static_cast<CCoordSysGraphDoc*>(m_pDocument);
 }
-#endif
 
+inline IRibbonCtrlProvider* CCoordSysGraphView::GetRibbonCtrlProvider() const noexcept {
+    return static_cast<IRibbonCtrlProvider*>(static_cast<CMainFrame*>(GetParentFrame()));
+}
+#endif

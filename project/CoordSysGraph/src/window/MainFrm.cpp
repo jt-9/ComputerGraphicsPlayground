@@ -38,6 +38,8 @@ BEGIN_MESSAGE_MAP(CMainFrame, CFrameWndEx)
     ON_COMMAND(ID_EDIT_COORD_TOP, &CMainFrame::OnEditCoordYmin)
     ON_COMMAND(ID_EDIT_COORD_RIGHT, &CMainFrame::OnEditCoordXmax)
     ON_COMMAND(ID_EDIT_COORD_BOTTOM, &CMainFrame::OnEditCoordYmax)
+    ON_COMMAND(ID_BUTTON_SWAP_HORIZONTAL_BOUNDS, &CMainFrame::OnButtonSwapHorizontalBounds)
+    ON_COMMAND(ID_BUTTON_SWAP_VERTICAL_BOUNDS, &CMainFrame::OnButtonSwapVerticalBounds)
 END_MESSAGE_MAP()
 
 // CMainFrame construction/destruction
@@ -140,7 +142,9 @@ CoordSys2DRibbonEditControls CMainFrame::initRibbonEditControls() const noexcept
         .editLeftBound_ = static_cast<CMFCRibbonEdit*>(m_wndRibbonBar.FindByID(ID_EDIT_COORD_LEFT)),
         .editTopBound_ = static_cast<CMFCRibbonEdit*>(m_wndRibbonBar.FindByID(ID_EDIT_COORD_TOP)),
         .editRightBound_ = static_cast<CMFCRibbonEdit*>(m_wndRibbonBar.FindByID(ID_EDIT_COORD_RIGHT)),
-        .editBottomBound_ = static_cast<CMFCRibbonEdit*>(m_wndRibbonBar.FindByID(ID_EDIT_COORD_BOTTOM))
+        .editBottomBound_ = static_cast<CMFCRibbonEdit*>(m_wndRibbonBar.FindByID(ID_EDIT_COORD_BOTTOM)),
+        .btnSwapHorizontalBounds_ = static_cast<CMFCRibbonButton*>(m_wndRibbonBar.FindByID(ID_BUTTON_SWAP_HORIZONTAL_BOUNDS)),
+        .btnSwapVerticalBounds_ = static_cast<CMFCRibbonButton*>(m_wndRibbonBar.FindByID(ID_BUTTON_SWAP_VERTICAL_BOUNDS)),
     };
 }
 
@@ -293,4 +297,18 @@ CMFCRibbonEdit& CMainFrame::getRibbonEdit(UINT ctrlID) const noexcept
     default:
         std::abort();
     }
+}
+
+
+void CMainFrame::OnButtonSwapHorizontalBounds()
+{
+    IRibbonEditCtrlOnCommand* view = dynamic_cast<IRibbonEditCtrlOnCommand*>(GetActiveView());
+    view->onCommand(m_wndRibbonBar, *m_ctrlRibbonEdit.btnSwapHorizontalBounds_);
+}
+
+
+void CMainFrame::OnButtonSwapVerticalBounds()
+{
+    IRibbonEditCtrlOnCommand* view = dynamic_cast<IRibbonEditCtrlOnCommand*>(GetActiveView());
+    view->onCommand(m_wndRibbonBar, *m_ctrlRibbonEdit.btnSwapVerticalBounds_);
 }
