@@ -68,6 +68,8 @@ public:
     afx_msg void OnEditCoordYmin();
     afx_msg void OnEditCoordXmax();
     afx_msg void OnEditCoordYmax();
+    afx_msg void OnButtonSwapHorizontalBounds();
+    afx_msg void OnButtonSwapVerticalBounds();
 };
 
 

@@ -84,6 +84,14 @@ namespace {
     inline constexpr typename CoordSys2D::Space::ScreenSpace fromScreenPoints(int left, int top, int right, int bottom) noexcept {
         return { {left, top}, {left, bottom}, {right, bottom} };
     }
+
+    enum class BoundingValuesSwap : std::int8_t {
+        None, Horizontal, Vertical
+    };
+
+    inline constexpr BoundingValuesSwap swapDirectionOnButtonClick(UINT buttonId) noexcept {
+        return buttonId == ID_BUTTON_SWAP_HORIZONTAL_BOUNDS ? BoundingValuesSwap::Horizontal : buttonId == ID_BUTTON_SWAP_VERTICAL_BOUNDS ? BoundingValuesSwap::Vertical : BoundingValuesSwap::None;
+    }
 }
 
 // CCoordSysGraphView
@@ -155,8 +163,7 @@ void CCoordSysGraphView::OnDraw(CDC* pDC)
 }
 
 void CCoordSysGraphView::OnInitialUpdate() {
-    auto* ribbonProvider = static_cast<IRibbonCtrlProvider*>(static_cast<CMainFrame*>(GetParentFrame()));
-    setupRibbonCtrls(*ribbonProvider);
+    setupRibbonCtrls(*GetRibbonCtrlProvider());
 
     CScrollView::OnInitialUpdate();
 
@@ -212,6 +219,11 @@ CCoordSysGraphDoc* CCoordSysGraphView::GetDocument() const noexcept {
     ASSERT(m_pDocument->IsKindOf(RUNTIME_CLASS(CCoordSysGraphDoc)));
     return static_cast<CCoordSysGraphDoc*>(m_pDocument);
 }
+
+IRibbonCtrlProvider* CCoordSysGraphView::GetRibbonCtrlProvider() const noexcept {
+    ASSERT(GetParentFrame()->IsKindOf(RUNTIME_CLASS(CMainFrame)));
+    return static_cast<IRibbonCtrlProvider*>(static_cast<CMainFrame*>(GetParentFrame()));
+}
 #endif //_DEBUG
 
 
@@ -230,8 +242,7 @@ BOOL CCoordSysGraphView::OnEraseBkgnd(CDC*) noexcept {
     return TRUE;
 }
 
-void CCoordSysGraphView::onCommand(CMFCRibbonBar& /*ribbon*/, CMFCRibbonEdit& edit) noexcept
-{
+void CCoordSysGraphView::onCommand(CMFCRibbonBar& /*ribbon*/, CMFCRibbonEdit& edit) noexcept {
     const CString inputEditTextCopy = edit.GetEditText();
     ClientRect boundingRect{ GetDocument()->getBoundRect() };
 
@@ -251,7 +262,7 @@ void CCoordSysGraphView::onCommand(CMFCRibbonBar& /*ribbon*/, CMFCRibbonEdit& ed
             const auto existingBoundingValue = getBoundingValue(edit.GetID(), boundingRect);
 
             if (existingBoundingValue != newBoundingValue) {
-                auto* document = GetDocument();
+                auto* const document = GetDocument();
                 document->setBoundRect(updateBoundingRect(boundingRect, edit.GetID(), newBoundingValue));
                 document->SetModifiedFlag();
                 document->UpdateAllViews(nullptr, 1);
@@ -265,15 +276,39 @@ void CCoordSysGraphView::onCommand(CMFCRibbonBar& /*ribbon*/, CMFCRibbonEdit& ed
     }
 }
 
+void CCoordSysGraphView::onCommand(CMFCRibbonBar& /*ribbon*/, CMFCRibbonButton& button) noexcept {
+    const auto boundsSwap = swapDirectionOnButtonClick(button.GetID());
+    if (boundsSwap != BoundingValuesSwap::None) {
+        ClientRect boundingRect{ GetDocument()->getBoundRect() };
+
+        using std::swap;
+        if (boundsSwap == BoundingValuesSwap::Horizontal) {
+            swap(boundingRect.left, boundingRect.right);
+        }
+        else if (boundsSwap == BoundingValuesSwap::Vertical) {
+            swap(boundingRect.top, boundingRect.bottom);
+        }
+
+        auto* const document = GetDocument();
+        document->setBoundRect(boundingRect);
+        document->SetModifiedFlag();
+        document->UpdateAllViews(nullptr, 1);
+        document->SetModifiedFlag(FALSE);
+
+        updateRibbonBoundEditCtrls(*GetRibbonCtrlProvider(), boundingRect);
+    }
+}
+
 void CCoordSysGraphView::setValueToEditField(CMFCRibbonEdit& edit, ClientRect::value_type value) const noexcept {
     const auto formattedValue = coordBoundingValueFormatter_(value);
     edit.SetEditText(CString{ CA2TEX<kConvertBufferSize>{formattedValue.data()} });
 }
 
-void CCoordSysGraphView::setupRibbonCtrls(const IRibbonCtrlProvider& provider) const noexcept
-{
-    const ClientRect boundingRect{ GetDocument()->getBoundRect() };
+void CCoordSysGraphView::setupRibbonCtrls(const IRibbonCtrlProvider& provider) const noexcept {
+    updateRibbonBoundEditCtrls(provider, GetDocument()->getBoundRect());
+}
 
+void CCoordSysGraphView::updateRibbonBoundEditCtrls(const IRibbonCtrlProvider& provider, const ClientRect& boundingRect) const noexcept {
     setValueToEditField(provider.getRibbonEdit(ID_EDIT_COORD_LEFT), boundingRect.left);
     setValueToEditField(provider.getRibbonEdit(ID_EDIT_COORD_TOP), boundingRect.top);
     setValueToEditField(provider.getRibbonEdit(ID_EDIT_COORD_RIGHT), boundingRect.right);
