@@ -43,6 +43,8 @@
 #define IDS_FIND_TAB                    302
 #define IDS_EDIT_MENU                   306
 #define IDR_RIBBON                      307
+#define IDB_COORD_SYS_LARGE             313
+#define IDB_COORD_SYS_SMALL             314
 #define ID_WRITE_PASTEASHYPERLINK       32770
 #define ID_EDIT_COORD_LEFT              32771
 #define ID_EDIT_COORD_RIGHT             32772
@@ -55,7 +57,7 @@
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        310
+#define _APS_NEXT_RESOURCE_VALUE        315
 #define _APS_NEXT_COMMAND_VALUE         32787
 #define _APS_NEXT_CONTROL_VALUE         1000
 #define _APS_NEXT_SYMED_VALUE           310
