@@ -196,9 +196,12 @@
     <ResourceCompile Include="CoordSysGraph.rc" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="res\bitmap2.bmp" />
     <Image Include="res\buttons.bmp" />
     <Image Include="res\CoordSysGraph.ico" />
     <Image Include="res\CoordSysGraphDoc.ico" />
+    <Image Include="res\CoordSysLarge .bmp" />
+    <Image Include="res\CoordSysSmall.bmp" />
     <Image Include="res\filelarge.bmp" />
     <Image Include="res\filesmall.bmp" />
     <Image Include="res\main.bmp" />
