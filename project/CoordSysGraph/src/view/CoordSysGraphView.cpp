@@ -58,6 +58,25 @@ namespace {
         }
     }
 
+    inline constexpr auto getOppositeBoundingValue(UINT editId, const ClientRect& boundingRect) noexcept {
+        switch (editId) {
+        case ID_EDIT_COORD_LEFT:
+            return boundingRect.right;
+        case ID_EDIT_COORD_TOP:
+            return boundingRect.bottom;
+        case ID_EDIT_COORD_RIGHT:
+            return boundingRect.left;
+        case ID_EDIT_COORD_BOTTOM:
+            return boundingRect.top;
+
+        default:
+        {
+            TRACE0("Failed to find branch with id provided\n");
+            std::abort();
+        }
+        }
+    }
+
     inline constexpr auto& updateBoundingRect(ClientRect& boundingRect, UINT editId, ClientRect::value_type value) noexcept {
         switch (editId) {
         case ID_EDIT_COORD_LEFT:
@@ -259,9 +278,11 @@ void CCoordSysGraphView::onCommand(CMFCRibbonBar& /*ribbon*/, CMFCRibbonEdit& ed
 
         // If success set into field and redraw
         if ((parseError == std::errc{}) && (ptrToLast == ptr)) {
-            const auto existingBoundingValue = getBoundingValue(edit.GetID(), boundingRect);
-
-            if (existingBoundingValue != newBoundingValue) {
+            if (getOppositeBoundingValue(edit.GetID(), boundingRect) == newBoundingValue) {
+                //edit.SetEditText(TEXT("Cannot be same as in column"));
+                setValueToEditField(edit, getBoundingValue(edit.GetID(), boundingRect));
+            }
+            else if (getBoundingValue(edit.GetID(), boundingRect) != newBoundingValue) {
                 auto* const document = GetDocument();
                 document->setBoundRect(updateBoundingRect(boundingRect, edit.GetID(), newBoundingValue));
                 document->SetModifiedFlag();
