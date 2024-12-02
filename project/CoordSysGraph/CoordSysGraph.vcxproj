@@ -201,6 +201,7 @@
     <Image Include="res\CoordSysGraph.ico" />
     <Image Include="res\CoordSysGraphDoc.ico" />
     <Image Include="res\CoordSysLarge .bmp" />
+    <Image Include="res\CoordSysLarge.bmp" />
     <Image Include="res\CoordSysSmall.bmp" />
     <Image Include="res\filelarge.bmp" />
     <Image Include="res\filesmall.bmp" />
