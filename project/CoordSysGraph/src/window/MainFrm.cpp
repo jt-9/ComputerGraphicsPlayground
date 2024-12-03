@@ -75,13 +75,13 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
     }
 
     CString strTitlePane1;
-    CString strTitlePane2;
+    //CString strTitlePane2;
     auto bNameValid = strTitlePane1.LoadString(IDS_STATUS_PANE1);
     ASSERT(bNameValid);
-    bNameValid = strTitlePane2.LoadString(IDS_STATUS_PANE2);
-    ASSERT(bNameValid);
+    //bNameValid = strTitlePane2.LoadString(IDS_STATUS_PANE2);
+    //ASSERT(bNameValid);
     m_wndStatusBar.AddElement(new CMFCRibbonStatusBarPane(ID_STATUSBAR_PANE1, strTitlePane1, TRUE), strTitlePane1);
-    m_wndStatusBar.AddExtendedElement(new CMFCRibbonStatusBarPane(ID_STATUSBAR_PANE2, strTitlePane2, TRUE), strTitlePane2);
+    //m_wndStatusBar.AddExtendedElement(new CMFCRibbonStatusBarPane(ID_STATUSBAR_PANE2, strTitlePane2, TRUE), strTitlePane2);
 
     // enable Visual Studio 2005 style docking window behavior
     CDockingManager::SetDockingMode(DT_SMART);
@@ -241,7 +241,7 @@ void CMainFrame::OnApplicationLook(UINT id)
     m_wndOutput.UpdateFonts();
     RedrawWindow(nullptr, nullptr, RDW_ALLCHILDREN | RDW_INVALIDATE | RDW_UPDATENOW | RDW_FRAME | RDW_ERASE);
 
-    theApp.WriteInt(_T("ApplicationLook"), theApp.m_nAppLook);
+    theApp.WriteInt(TEXT("ApplicationLook"), theApp.m_nAppLook);
 }
 
 void CMainFrame::OnUpdateApplicationLook(CCmdUI* pCmdUI)

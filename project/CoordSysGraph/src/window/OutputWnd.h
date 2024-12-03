@@ -18,11 +18,11 @@ class COutputList : public CListBox
 {
 // Construction
 public:
-    COutputList() noexcept;
+    COutputList(CDockablePane* parentPane) noexcept;
 
 // Implementation
 public:
-    virtual ~COutputList();
+    ~COutputList() noexcept override;
 
 protected:
     afx_msg void OnContextMenu(CWnd* pWnd, CPoint point);
@@ -31,6 +31,9 @@ protected:
     afx_msg void OnViewOutput();
 
     DECLARE_MESSAGE_MAP()
+
+private:
+    CDockablePane* parentPane_;
 };
 
 class COutputWnd : public CDockablePane
@@ -47,18 +50,16 @@ protected:
 
     COutputList m_wndOutputBuild;
     COutputList m_wndOutputDebug;
-    COutputList m_wndOutputFind;
 
 protected:
     void FillBuildWindow();
     void FillDebugWindow();
-    void FillFindWindow();
 
     void AdjustHorzScroll(CListBox& wndListBox);
 
 // Implementation
 public:
-    virtual ~COutputWnd();
+    ~COutputWnd() noexcept override;
 
 protected:
     afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);
