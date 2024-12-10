@@ -11,6 +11,14 @@
 
 #pragma once
 
+
+class IOutputListActionListener {
+public:
+    virtual void onOutputListCopy(CListBox& outputList) noexcept = 0;
+    virtual void onOutputListClear(CListBox& outputList) noexcept = 0;
+    virtual void onVisibilityChange(CListBox& outputList, BOOL bShow) noexcept = 0;
+};
+
 /////////////////////////////////////////////////////////////////////////////
 // COutputList window
 
@@ -18,25 +26,31 @@ class COutputList : public CListBox
 {
 // Construction
 public:
-    COutputList(CDockablePane* parentPane) noexcept;
+    COutputList(IOutputListActionListener* outputListListener) noexcept;
+    ~COutputList() noexcept override;
+
+    COutputList(COutputList&&) noexcept;
+    COutputList& operator = (COutputList&&) noexcept;
+
+    COutputList(const COutputList&) = delete;
+    COutputList& operator = (const COutputList&) = delete;
 
 // Implementation
 public:
-    ~COutputList() noexcept override;
 
 protected:
-    afx_msg void OnContextMenu(CWnd* pWnd, CPoint point);
-    afx_msg void OnEditCopy();
-    afx_msg void OnEditClear();
-    afx_msg void OnViewOutput();
+    afx_msg void OnContextMenu(CWnd* pWnd, CPoint point) noexcept;
+    afx_msg void OnEditCopy() noexcept;
+    afx_msg void OnEditClear() noexcept;
+    afx_msg void OnViewOutput() noexcept;
 
     DECLARE_MESSAGE_MAP()
 
 private:
-    CDockablePane* parentPane_;
+    IOutputListActionListener* outputListListener_;
 };
 
-class COutputWnd : public CDockablePane
+class COutputWnd : public CDockablePane, private IOutputListActionListener
 {
 // Construction
 public:
@@ -60,6 +74,11 @@ protected:
 // Implementation
 public:
     ~COutputWnd() noexcept override;
+
+private:
+    void onOutputListCopy(CListBox& outputList) noexcept override;
+    void onOutputListClear(CListBox& outputList) noexcept override;
+    void onVisibilityChange(CListBox& outputList, BOOL bShow) noexcept override;
 
 protected:
     afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);

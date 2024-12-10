@@ -16,6 +16,8 @@
 #include "Resource.h"
 #include "MainFrm.h"
 
+#include <algorithm>
+
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #undef THIS_FILE
@@ -26,14 +28,27 @@ static char THIS_FILE[] = __FILE__;
 /////////////////////////////////////////////////////////////////////////////
 // COutputList
 
-COutputList::COutputList(CDockablePane* parentPane) noexcept
-    : parentPane_{ parentPane }
+COutputList::COutputList(IOutputListActionListener* outputListListener) noexcept
+    : outputListListener_{ outputListListener }
 {
 }
 
 COutputList::~COutputList() noexcept
 {
-    parentPane_ = nullptr;
+}
+
+COutputList::COutputList(COutputList&& src) noexcept
+    : outputListListener_{ src.outputListListener_ }
+{
+    src.outputListListener_ = nullptr;
+}
+
+COutputList& COutputList::operator = (COutputList&& src) noexcept
+{
+    outputListListener_ = src.outputListListener_;
+    src.outputListListener_ = nullptr;
+
+    return *this;
 }
 
 BEGIN_MESSAGE_MAP(COutputList, CListBox)
@@ -46,7 +61,7 @@ END_MESSAGE_MAP()
 /////////////////////////////////////////////////////////////////////////////
 // COutputList message handlers
 
-void COutputList::OnContextMenu(CWnd* /*pWnd*/, CPoint point)
+void COutputList::OnContextMenu(CWnd* /*pWnd*/, CPoint point) noexcept
 {
     CMenu menu;
     menu.LoadMenu(IDR_OUTPUT_POPUP);
@@ -57,8 +72,11 @@ void COutputList::OnContextMenu(CWnd* /*pWnd*/, CPoint point)
     {
         CMFCPopupMenu* pPopupMenu = new CMFCPopupMenu;
 
-        if (!pPopupMenu->Create(this, point.x, point.y, (HMENU)pSumMenu->m_hMenu, FALSE, TRUE))
+        if (!pPopupMenu->Create(this, point.x, point.y, pSumMenu->m_hMenu, FALSE, TRUE)) {
+            delete pPopupMenu;
+
             return;
+        }
 
         ((CFrameWndEx*)AfxGetMainWnd())->OnShowPopupMenu(pPopupMenu);
         UpdateDialogControls(this, TRUE);
@@ -67,26 +85,24 @@ void COutputList::OnContextMenu(CWnd* /*pWnd*/, CPoint point)
     SetFocus();
 }
 
-void COutputList::OnEditCopy()
+void COutputList::OnEditCopy() noexcept
 {
-    MessageBox(_T("Copy output"));
+    if (outputListListener_) {
+        outputListListener_->onOutputListCopy(*this);
+    }
 }
 
-void COutputList::OnEditClear()
+void COutputList::OnEditClear() noexcept
 {
-    MessageBox(_T("Clear output"));
+    if (outputListListener_) {
+        outputListListener_->onOutputListClear(*this);
+    }
 }
 
-void COutputList::OnViewOutput()
+void COutputList::OnViewOutput() noexcept
 {
-    CDockablePane* const pParentBar = parentPane_;//DYNAMIC_DOWNCAST(CDockablePane, GetOwner());
-    CFrameWndEx* pMainFrame = DYNAMIC_DOWNCAST(CFrameWndEx, GetTopLevelFrame());
-
-    if (pMainFrame != nullptr && pParentBar != nullptr)
-    {
-        pMainFrame->SetFocus();
-        pMainFrame->ShowPane(pParentBar, FALSE, FALSE, FALSE);
-        pMainFrame->RecalcLayout();
+    if (outputListListener_) {
+        outputListListener_->onVisibilityChange(*this, FALSE);
     }
 }
 
@@ -172,7 +188,7 @@ void COutputWnd::AdjustHorzScroll(CListBox& wndListBox)
         CString strItem;
         wndListBox.GetText(i, strItem);
 
-        cxExtentMax = max(cxExtentMax, (int)dc.GetTextExtent(strItem).cx);
+        cxExtentMax = (std::max)(cxExtentMax, (int)dc.GetTextExtent(strItem).cx);
     }
 
     wndListBox.SetHorizontalExtent(cxExtentMax);
@@ -197,4 +213,26 @@ void COutputWnd::UpdateFonts()
 {
     m_wndOutputBuild.SetFont(&afxGlobalData.fontRegular);
     m_wndOutputDebug.SetFont(&afxGlobalData.fontRegular);
+}
+
+void COutputWnd::onOutputListCopy(CListBox& /*outputList*/) noexcept
+{
+    MessageBox(_T("Copy output"));
+}
+
+void COutputWnd::onOutputListClear(CListBox& /*outputList*/) noexcept
+{
+    MessageBox(_T("Clear output"));
+}
+
+void COutputWnd::onVisibilityChange(CListBox& /*outputList*/, BOOL bShow) noexcept
+{
+    CFrameWndEx* pMainFrame = DYNAMIC_DOWNCAST(CFrameWndEx, GetTopLevelFrame());
+
+    if (pMainFrame != nullptr)
+    {
+        pMainFrame->SetFocus();
+        pMainFrame->ShowPane(this, bShow, FALSE, FALSE);
+        pMainFrame->RecalcLayout();
+    }
 }
