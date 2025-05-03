@@ -178,7 +178,7 @@ void COutputWnd::OnSize(UINT nType, int cx, int cy)
 
 void COutputWnd::AdjustHorzScroll(CListBox& wndListBox)
 {
-    CClientDC dc(this);
+    CClientDC dc{ this };
     CFont* pOldFont = dc.SelectObject(&afxGlobalData.fontRegular);
 
     int cxExtentMax = 0;

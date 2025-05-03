@@ -123,7 +123,7 @@ HRESULT basicFileOpen(const std::vector<COMDLG_FILTERSPEC>& saveTypes, std::wstr
             pfde.reset(p);
         }
 
-        raii::unique_rc<DWORD, raii::com_object_file_dialog_unadvise> pfdAdvise{ 0, raii::com_object_file_dialog_unadvise{nullptr} };
+        raii::unique_rc<DWORD, raii::com_object_file_dialog_unadvise> pfdAdvise;
         {
             // Hook up the event handler.
             DWORD dwCookie;
@@ -132,7 +132,7 @@ HRESULT basicFileOpen(const std::vector<COMDLG_FILTERSPEC>& saveTypes, std::wstr
                 break;
             }
 
-            pfdAdvise = raii::unique_rc<DWORD, raii::com_object_file_dialog_unadvise>{ dwCookie, raii::com_object_file_dialog_unadvise{pfd.get()} };
+            pfdAdvise = raii::unique_rc<DWORD, raii::com_object_file_dialog_unadvise>{ {pfd.get(), dwCookie} };
         }
 
         // Set the options on the dialog.

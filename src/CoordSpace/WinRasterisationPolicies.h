@@ -20,7 +20,8 @@ MY_COORD_SPACE_BEGIN
 struct WinGDIRasteriser {
 	MYMTL_INLINE explicit constexpr WinGDIRasteriser(HDC hdc) noexcept
 		: hdc_{ hdc }
-	{}
+	{
+	}
 
 	constexpr WinGDIRasteriser(const WinGDIRasteriser&) noexcept = default;
 	constexpr WinGDIRasteriser& operator = (const WinGDIRasteriser&) noexcept = default;
@@ -92,7 +93,7 @@ struct WinGDIRasteriser {
 	}
 
 	template<typename U, typename V>
-		requires std::convertible_to<U, int> && std::convertible_to<V, int>
+		requires std::convertible_to<U, int>&& std::convertible_to<V, int>
 	MYMTL_INLINE auto arc(const mymtl::Vector2<U>& upper_left, const mymtl::Vector2<U>& bottom_right, const mymtl::Vector2<V>& start, const mymtl::Vector2<V>& end) const noexcept {
 		return arc(upper_left.x, upper_left.y, bottom_right.x, bottom_right.y, start.x, start.y, end.x, end.y);
 	}
@@ -134,7 +135,7 @@ struct WinGDIRasteriser {
 	}
 
 	MYMTL_INLINE constexpr auto selectObjectResource(HGDIOBJ o) const noexcept {
-		return raii::unique_rc<HGDIOBJ, raii::gdi_select_object_nullptr<HGDIOBJ>>{ SelectObject(hdc_, o), raii::gdi_select_object_nullptr<HGDIOBJ>{hdc_} };
+		return raii::unique_rc<HGDIOBJ, raii::gdi_select_object<HGDIOBJ>>{ {hdc_, SelectObject(hdc_, o)}, raii::gdi_select_object<HGDIOBJ>{} };
 	}
 
 	MYMTL_INLINE auto selectObject(HGDIOBJ o) const noexcept {
@@ -142,7 +143,7 @@ struct WinGDIRasteriser {
 	}
 
 	MYMTL_INLINE constexpr auto saveStateRAII() const noexcept {
-		return raii::unique_rc<HDC, raii::gdi_restore_dc_nullptr>{ hdc_, raii::gdi_restore_dc_nullptr{ SaveDC(hdc_) } };
+		return raii::unique_rc<HDC, raii::gdi_restore_dc_nullptr>{ {hdc_, SaveDC(hdc_)} };
 	}
 private:
 	HDC hdc_; // non owning, caller is responsible for passing correct HDC

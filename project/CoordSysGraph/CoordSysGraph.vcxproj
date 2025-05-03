@@ -249,6 +249,7 @@
     <ClInclude Include="..\..\src\CoordSpace\Rasteriser.h" />
     <ClInclude Include="..\..\src\CoordSpace\WinRasterisationPolicies.h" />
     <ClInclude Include="..\..\src\MemoryDC\MemoryDC.hpp" />
+    <ClInclude Include="..\..\src\raii\concepts.hpp" />
     <ClInclude Include="..\..\src\raii\deleter\memory_delete.hpp" />
     <ClInclude Include="..\..\src\raii\deleter\stdio_fclose.hpp" />
     <ClInclude Include="..\..\src\raii\deleter\windows_close_handle.hpp" />

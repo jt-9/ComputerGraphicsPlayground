@@ -213,6 +213,9 @@
     <ClInclude Include="..\..\src\MemoryDC\MemoryDC.hpp">
       <Filter>MemoryDC</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\raii\concepts.hpp">
+      <Filter>raii</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\myCG\io\ModelReader-inl.h">

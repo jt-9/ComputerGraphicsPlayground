@@ -255,6 +255,7 @@
     <ClInclude Include="..\..\src\myCG\MyCG.h" />
     <ClInclude Include="..\..\src\myCG\MyCGDefines.h" />
     <ClInclude Include="..\..\src\myCG\MyCGRasterisationPolicy.h" />
+    <ClInclude Include="..\..\src\raii\concepts.hpp" />
     <ClInclude Include="..\..\src\raii\deleter\memory_delete.hpp" />
     <ClInclude Include="..\..\src\raii\deleter\stdio_fclose.hpp" />
     <ClInclude Include="..\..\src\raii\deleter\windows_close_handle.hpp" />

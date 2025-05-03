@@ -252,5 +252,8 @@
     <ClInclude Include="..\..\src\CoordSpace\CartesianCoordSysAxisName.hpp">
       <Filter>CoordSpace</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\raii\concepts.hpp">
+      <Filter>raii</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
